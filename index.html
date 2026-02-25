@@ -73,6 +73,21 @@
         SCORE_YACHT,
       ];
 
+      const scoreCalculators = {
+        [SCORE_ONES]: (dices) => getNumbersScore(dices, 1),
+        [SCORE_TWOS]: (dices) => getNumbersScore(dices, 2),
+        [SCORE_THREES]: (dices) => getNumbersScore(dices, 3),
+        [SCORE_FOURS]: (dices) => getNumbersScore(dices, 4),
+        [SCORE_FIVES]: (dices) => getNumbersScore(dices, 5),
+        [SCORE_SIXES]: (dices) => getNumbersScore(dices, 6),
+        [SCORE_FULL_HOUSE]: getFullHouseScore,
+        [SCORE_FOUR_OF_A_KIND]: getFourOfAKindScore,
+        [SCORE_SMALL_STRAIGHT]: getSmallStraightScore,
+        [SCORE_BIG_STRAIGHT]: getBigStraightScore,
+        [SCORE_CHOICE]: getChoiceScore,
+        [SCORE_YACHT]: getYahtzeeScore,
+      };
+
       let scores;
       let mode;
       let lastDiceMode;
@@ -265,23 +280,10 @@
         return str === "12345" || str === "23456";
       }
 
-      function getOnesScore(dice) {
-        return dice.filter((d) => d === 1).reduce((s, d) => s + d, 0);
-      }
-      function getTwosScore(dice) {
-        return dice.filter((d) => d === 2).reduce((s, d) => s + d, 0);
-      }
-      function getThreesScore(dice) {
-        return dice.filter((d) => d === 3).reduce((s, d) => s + d, 0);
-      }
-      function getFoursScore(dice) {
-        return dice.filter((d) => d === 4).reduce((s, d) => s + d, 0);
-      }
-      function getFivesScore(dice) {
-        return dice.filter((d) => d === 5).reduce((s, d) => s + d, 0);
-      }
-      function getSixesScore(dice) {
-        return dice.filter((d) => d === 6).reduce((s, d) => s + d, 0);
+      function getNumbersScore(dice, targetNumber) {
+        return dice
+          .filter((d) => d === targetNumber)
+          .reduce((s, d) => s + d, 0);
       }
 
       function getFullHouseScore(dice) {
@@ -311,44 +313,8 @@
       function chooseScore() {
         finishRound(rollsLeft > 0);
 
-        switch (TABLE_ROWS_SELECTABLE[selectedTableRow]) {
-          case SCORE_ONES:
-            scores[SCORE_ONES] = getOnesScore(dices);
-            break;
-          case SCORE_TWOS:
-            scores[SCORE_TWOS] = getTwosScore(dices);
-            break;
-          case SCORE_THREES:
-            scores[SCORE_THREES] = getThreesScore(dices);
-            break;
-          case SCORE_FOURS:
-            scores[SCORE_FOURS] = getFoursScore(dices);
-            break;
-          case SCORE_FIVES:
-            scores[SCORE_FIVES] = getFivesScore(dices);
-            break;
-          case SCORE_SIXES:
-            scores[SCORE_SIXES] = getSixesScore(dices);
-            break;
-          case SCORE_FULL_HOUSE:
-            scores[SCORE_FULL_HOUSE] = getFullHouseScore(dices);
-            break;
-          case SCORE_FOUR_OF_A_KIND:
-            scores[SCORE_FOUR_OF_A_KIND] = getFourOfAKindScore(dices);
-            break;
-          case SCORE_SMALL_STRAIGHT:
-            scores[SCORE_SMALL_STRAIGHT] = getSmallStraightScore(dices);
-            break;
-          case SCORE_BIG_STRAIGHT:
-            scores[SCORE_BIG_STRAIGHT] = getBigStraightScore(dices);
-            break;
-          case SCORE_CHOICE:
-            scores[SCORE_CHOICE] = getChoiceScore(dices);
-            break;
-          case SCORE_YACHT:
-            scores[SCORE_YACHT] = getYahtzeeScore(dices);
-            break;
-        }
+        const row = TABLE_ROWS_SELECTABLE[selectedTableRow];
+        scores[row] = scoreCalculators[row](dices);
 
         gsap.fromTo(
           "#" + TABLE_ROWS_SELECTABLE[selectedTableRow],
@@ -435,10 +401,10 @@
       }
 
       function refreshAll() {
-        redrawTable();
-        redrawDicesKeep();
-        redrawDices();
-        redrawUI();
+        refreshTable();
+        refreshDicesKeep();
+        refreshDices();
+        refreshUI();
       }
 
       function handleKeyDown(e) {
@@ -533,13 +499,13 @@
             break;
         }
 
-        redrawTable();
-        redrawDicesKeep();
-        redrawDices();
-        redrawUI();
+        refreshTable();
+        refreshDicesKeep();
+        refreshDices();
+        refreshUI();
       }
 
-      function redrawUI() {
+      function refreshUI() {
         const btn = document.getElementById("rollDice");
         btn.disabled =
           rollsLeft === 0 && mode !== MODE_END_GAME && mode !== MODE_END_ROUND;
@@ -609,69 +575,11 @@
           ...dicesKeep.filter((a) => a !== null),
         ];
 
-        switch (row) {
-          case SCORE_ONES:
-            return (
-              '<span class="suggestion">' + getOnesScore(combined) + "</span>"
-            );
-          case SCORE_TWOS:
-            return (
-              '<span class="suggestion">' + getTwosScore(combined) + "</span>"
-            );
-          case SCORE_THREES:
-            return (
-              '<span class="suggestion">' + getThreesScore(combined) + "</span>"
-            );
-          case SCORE_FOURS:
-            return (
-              '<span class="suggestion">' + getFoursScore(combined) + "</span>"
-            );
-          case SCORE_FIVES:
-            return (
-              '<span class="suggestion">' + getFivesScore(combined) + "</span>"
-            );
-          case SCORE_SIXES:
-            return (
-              '<span class="suggestion">' + getSixesScore(combined) + "</span>"
-            );
-          case SCORE_FULL_HOUSE:
-            return (
-              '<span class="suggestion">' +
-              getFullHouseScore(combined) +
-              "</span>"
-            );
-          case SCORE_FOUR_OF_A_KIND:
-            return (
-              '<span class="suggestion">' +
-              getFourOfAKindScore(combined) +
-              "</span>"
-            );
-          case SCORE_SMALL_STRAIGHT:
-            return (
-              '<span class="suggestion">' +
-              getSmallStraightScore(combined) +
-              "</span>"
-            );
-          case SCORE_BIG_STRAIGHT:
-            return (
-              '<span class="suggestion">' +
-              getBigStraightScore(combined) +
-              "</span>"
-            );
-          case SCORE_CHOICE:
-            return (
-              '<span class="suggestion">' + getChoiceScore(combined) + "</span>"
-            );
-          case SCORE_YACHT:
-            return (
-              '<span class="suggestion">' +
-              getYahtzeeScore(combined) +
-              "</span>"
-            );
-        }
+        const score = scoreCalculators[row](combined);
+        return '<span class="suggestion">' + score + "</span>";
       }
 
-      function redrawTable() {
+      function refreshTable() {
         for (let i = 0; i < TABLE_ROWS_SELECTABLE.length; i++) {
           document.getElementById(
             TABLE_ROWS_SELECTABLE[i],
@@ -699,7 +607,7 @@
           calculateTotal();
       }
 
-      function redrawDicesKeep() {
+      function refreshDicesKeep() {
         for (let i = 0; i < 5; i++) {
           const diceElem = document.getElementById("diceKeep" + i);
 
@@ -717,7 +625,7 @@
         }
       }
 
-      function redrawDices() {
+      function refreshDices() {
         for (let i = 0; i < 5; i++) {
           const diceElem = document.getElementById("dice" + i);
 
@@ -737,10 +645,10 @@
 
       function handleLoad() {
         initializeGame();
-        redrawTable();
-        redrawDices();
-        redrawDicesKeep();
-        redrawUI();
+        refreshTable();
+        refreshDices();
+        refreshDicesKeep();
+        refreshUI();
       }
     </script>
     <style>
