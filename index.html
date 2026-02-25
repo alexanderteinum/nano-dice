@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>fivedice.io</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
     <script>
       const MODE_NONE = 0;
@@ -766,17 +767,78 @@
       }
     </script>
     <style>
+      * {
+        box-sizing: border-box;
+      }
+
       body {
         background-color: #1e1e2e;
         color: #cdd6f4;
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100vh;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
       }
 
       img {
         fill: #cdd6f4 !important;
+        max-width: 100%;
+        height: auto;
+      }
+
+      .main-container {
+        display: flex;
+        width: 100%;
+        max-width: 896px;
+        flex-direction: row;
+        gap: 32px;
+        justify-content: center;
+        align-items: stretch;
+      }
+
+      .game-area {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
+      }
+
+      #dice, #diceKeep {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: nowrap;
+        width: 100%;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+
+        .main-container {
+          flex-direction: column;
+          align-items: center;
+          gap: 24px;
+        }
+
+        .end-of-game {
+          font-size: 48px !important;
+        }
+
+        #dice img {
+          width: 16vw;
+          max-width: 64px;
+        }
+
+        #diceKeep img {
+          width: 12vw;
+          max-width: 48px;
+        }
       }
 
       body,
@@ -854,8 +916,8 @@
   </head>
   <!-- Icons from https://game-icons.net/tags/dice.html -->
   <body onkeydown="handleKeyDown(event)" onload="handleLoad()">
-    <div style="display: flex; width: 896px">
-      <div>
+    <div class="main-container">
+      <div class="table-container">
         <table>
           <thead>
             <tr>
@@ -932,25 +994,18 @@
           </tbody>
         </table>
       </div>
-      <div
-        style="
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          margin-left: 32px;
-        "
-      >
+      <div class="game-area">
         <div class="end-of-game" id="endOfGame" style="display: none">
           Well done!
         </div>
-        <div id="diceKeep" style="margin-bottom: 16px">
+        <div id="diceKeep">
           <img class="dice-keep-0" id="diceKeep0" src="none.svg" width="64" />
           <img class="dice-keep-1" id="diceKeep1" src="none.svg" width="64" />
           <img class="dice-keep-2" id="diceKeep2" src="none.svg" width="64" />
           <img class="dice-keep-3" id="diceKeep3" src="none.svg" width="64" />
           <img class="dice-keep-4" id="diceKeep4" src="none.svg" width="64" />
         </div>
-        <div id="dice" style="margin-bottom: 16px">
+        <div id="dice">
           <img class="dice-0" id="dice0" src="none.svg" width="96" />
           <img class="dice-1" id="dice1" src="none.svg" width="96" />
           <img class="dice-2" id="dice2" src="none.svg" width="96" />
