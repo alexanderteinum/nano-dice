@@ -73,64 +73,31 @@
         SCORE_YACHT,
       ];
 
-      let dices;
-      let dicesKeep;
-      let activeDice;
-      let activeDiceKeep;
-      let selectedTableRow;
-      let mode;
-      let rollsLeft;
       let scores;
+      let mode;
       let lastDiceMode;
+      let selectedTableRow;
+      let dicesKeep;
+      let activeDiceKeep;
+      let dices;
+      let activeDice;
+      let rollsLeft;
 
       function initializeGame() {
-        dices = [
-          randomIntFromInterval(1, 6),
-          randomIntFromInterval(1, 6),
-          randomIntFromInterval(1, 6),
-          randomIntFromInterval(1, 6),
-          randomIntFromInterval(1, 6),
-        ];
-        dicesKeep = [null, null, null, null, null];
-        selectedTableRow = 0;
-        activeDiceKeep = 0;
-        activeDice = 0;
-        rollsLeft = 2;
-        mode = MODE_DICES;
-        lastDiceMode = MODE_DICES;
         scores = {};
         for (let i = 0; i < TABLE_ROWS_SELECTABLE.length; i++) {
           scores[TABLE_ROWS_SELECTABLE[i]] = null;
         }
 
-        gsap.fromTo(
-          ".dice-0",
-          { y: -100, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.2, delay: 0.0 },
-        );
-        gsap.fromTo(
-          ".dice-1",
-          { y: -100, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.2, delay: 0.05 },
-        );
-        gsap.fromTo(
-          ".dice-2",
-          { y: -100, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.2, delay: 0.1 },
-        );
-        gsap.fromTo(
-          ".dice-3",
-          { y: -100, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.2, delay: 0.15 },
-        );
-        gsap.fromTo(
-          ".dice-4",
-          { y: -100, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.2, delay: 0.2 },
-        );
+        initializeRound();
       }
 
       function initializeRound() {
+        mode = MODE_DICES;
+        lastDiceMode = MODE_DICES;
+        selectedTableRow = 0;
+        dicesKeep = [null, null, null, null, null];
+        activeDiceKeep = 0;
         dices = [
           randomIntFromInterval(1, 6),
           randomIntFromInterval(1, 6),
@@ -138,39 +105,13 @@
           randomIntFromInterval(1, 6),
           randomIntFromInterval(1, 6),
         ];
-
-        dicesKeep = [null, null, null, null, null];
-        selectedTableRow = 0;
-        activeDiceKeep = 0;
         activeDice = 0;
         rollsLeft = 2;
-        mode = MODE_DICES;
-        lastDiceMode = MODE_DICES;
 
         gsap.fromTo(
-          ".dice-0",
+          "#dice img",
           { y: -100, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.2, delay: 0.0 },
-        );
-        gsap.fromTo(
-          ".dice-1",
-          { y: -100, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.2, delay: 0.05 },
-        );
-        gsap.fromTo(
-          ".dice-2",
-          { y: -100, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.2, delay: 0.1 },
-        );
-        gsap.fromTo(
-          ".dice-3",
-          { y: -100, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.2, delay: 0.15 },
-        );
-        gsap.fromTo(
-          ".dice-4",
-          { y: -100, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.2, delay: 0.2 },
+          { y: 0, opacity: 1, duration: 0.2, stagger: 0.05 }
         );
       }
 
@@ -189,7 +130,7 @@
           dices[i] = randomIntFromInterval(1, 6);
           if (rollsLeft > 1) {
             gsap.fromTo(
-              ".dice-" + i,
+              "#dice img:nth-child(" + (i + 1) + ")",
               { y: -200, opacity: 0 },
               { y: 0, opacity: 1, duration: 0.2, delay: rolled * 0.05 },
             );
@@ -219,29 +160,9 @@
         if (!animate) return;
 
         gsap.fromTo(
-          ".dice-0",
+          "#dice img",
           { opacity: 0 },
-          { opacity: 1, duration: 1, delay: 0 },
-        );
-        gsap.fromTo(
-          ".dice-1",
-          { opacity: 0 },
-          { opacity: 1, duration: 1, delay: 0.1 },
-        );
-        gsap.fromTo(
-          ".dice-2",
-          { opacity: 0 },
-          { opacity: 1, duration: 1, delay: 0.2 },
-        );
-        gsap.fromTo(
-          ".dice-3",
-          { opacity: 0 },
-          { opacity: 1, duration: 1, delay: 0.3 },
-        );
-        gsap.fromTo(
-          ".dice-4",
-          { opacity: 0 },
-          { opacity: 1, duration: 1, delay: 0.4 },
+          { opacity: 1, duration: 1, stagger: 0.1 }
         );
       }
 
@@ -250,23 +171,11 @@
       }
 
       function getDicesKeepCount() {
-        for (let i = 0; i < 5; i++) {
-          if (dicesKeep[i] === null) {
-            return i;
-          }
-        }
-
-        return 5;
+        return dicesKeep.filter((d) => d !== null).length;
       }
 
       function getDicesCount() {
-        for (let i = 0; i < 5; i++) {
-          if (dices[i] === null) {
-            return i;
-          }
-        }
-
-        return 5;
+        return dices.filter((d) => d !== null).length;
       }
 
       function keepCurrentDice() {
@@ -274,7 +183,7 @@
           if (dicesKeep[i] === null) {
             dicesKeep[i] = dices[activeDice];
             gsap.fromTo(
-              ".dice-keep-" + i,
+              "#diceKeep img:nth-child(" + (i + 1) + ")",
               { y: 50, opacity: 0 },
               { y: 0, opacity: 1, duration: 0.2 },
             );
@@ -286,7 +195,7 @@
         dices[4] = null;
         activeDice = Math.max(Math.min(activeDice, getDicesCount() - 1), 0);
 
-        if (dices.filter((a) => a === null).length === 5) {
+        if (getDicesCount() === 0) {
           activeDiceKeep = 0;
           mode = MODE_DICES_KEEP;
           lastDiceMode = MODE_DICES_KEEP;
@@ -298,7 +207,7 @@
           if (dices[i] === null) {
             dices[i] = dicesKeep[activeDiceKeep];
             gsap.fromTo(
-              ".dice-" + i,
+              "#dice img:nth-child(" + (i + 1) + ")",
               { y: -50, opacity: 0 },
               { y: 0, opacity: 1, duration: 0.2 },
             );
@@ -847,23 +756,12 @@
         justify-content: center;
         min-height: 100vh;
         margin: 0;
-        padding: 20px;
-      }
-
-      img {
-        fill: #cdd6f4 !important;
-        max-width: 100%;
-        height: auto;
       }
 
       .main-container {
         display: flex;
-        width: 100%;
         max-width: 896px;
         flex-direction: row;
-        gap: 32px;
-        justify-content: center;
-        align-items: stretch;
       }
 
       .game-area {
@@ -871,17 +769,8 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        text-align: center;
         gap: 16px;
-      }
-
-      #dice,
-      #diceKeep {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: nowrap;
-        width: 100%;
+        width: 640px;
       }
 
       @media (max-width: 768px) {
@@ -928,13 +817,7 @@
 
       body,
       button {
-        font-family:
-          "Inter",
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          Roboto,
-          sans-serif;
+        font-family: "Inter"
       }
 
       button.roll-dice {
@@ -947,9 +830,9 @@
         cursor: pointer;
       }
 
-      #dice img,
       #diceKeep img,
-      tbody tr {
+      #dice img,
+      tbody tr.selectable {
         cursor: pointer;
       }
 
@@ -962,18 +845,15 @@
         width: 256px;
       }
 
+      th {
+        text-align: left;
+      }
+
       th,
       td {
         border: 1px solid #45475a;
         padding: 4px;
         font-size: 14px;
-      }
-
-      .rolls {
-        width: 50%;
-      }
-
-      .score {
         width: 50%;
       }
 
@@ -981,34 +861,30 @@
         font-size: 12px;
       }
 
-      th {
-        text-align: left;
-      }
-
-      .end-of-game {
-        font-size: 96px;
-      }
-
-      table th:first-child,
+      th:first-child,
       td:first-child {
         border-left: 0;
       }
 
-      table th:last-child,
+      th:last-child,
       td:last-child {
         border-right: 0;
       }
 
-      table thead tr:first-child th {
+      thead tr:first-child th {
         border-top: 0;
       }
 
-      table tbody tr:last-child td {
+      tbody tr:last-child td {
         border-bottom: 0;
       }
 
       .suggestion {
         color: #6c7086;
+      }
+
+      .end-of-game {
+        font-size: 96px;
       }
     </style>
   </head>
@@ -1018,36 +894,36 @@
         <table>
           <thead>
             <tr>
-              <th style="border-bottom: 1px solid #7f849c" class="rolls">
+              <th style="border-bottom: 1px solid #7f849c">
                 Roll
               </th>
-              <th style="border-bottom: 1px solid #7f849c" class="score">
+              <th style="border-bottom: 1px solid #7f849c">
                 Score
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr id="scoreOnes" onclick="handleRowClick('scoreOnes')">
+            <tr class="selectable" id="scoreOnes" onclick="handleRowClick('scoreOnes')">
               <td>Ones</td>
               <td></td>
             </tr>
-            <tr id="scoreTwos" onclick="handleRowClick('scoreTwos')">
+            <tr class="selectable" id="scoreTwos" onclick="handleRowClick('scoreTwos')">
               <td>Twos</td>
               <td></td>
             </tr>
-            <tr id="scoreThrees" onclick="handleRowClick('scoreThrees')">
+            <tr class="selectable" id="scoreThrees" onclick="handleRowClick('scoreThrees')">
               <td>Threes</td>
               <td></td>
             </tr>
-            <tr id="scoreFours" onclick="handleRowClick('scoreFours')">
+            <tr class="selectable" id="scoreFours" onclick="handleRowClick('scoreFours')">
               <td>Fours</td>
               <td></td>
             </tr>
-            <tr id="scoreFives" onclick="handleRowClick('scoreFives')">
+            <tr class="selectable" id="scoreFives" onclick="handleRowClick('scoreFives')">
               <td>Fives</td>
               <td></td>
             </tr>
-            <tr id="scoreSixes" onclick="handleRowClick('scoreSixes')">
+            <tr class="selectable" id="scoreSixes" onclick="handleRowClick('scoreSixes')">
               <td style="border-bottom: 1px solid #7f849c">Sixes</td>
               <td style="border-bottom: 1px solid #7f849c"></td>
             </tr>
@@ -1059,11 +935,12 @@
               <td style="border-bottom: 1px solid #7f849c">Bonus</td>
               <td style="border-bottom: 1px solid #7f849c"></td>
             </tr>
-            <tr id="scoreFullHouse" onclick="handleRowClick('scoreFullHouse')">
+            <tr class="selectable" id="scoreFullHouse" onclick="handleRowClick('scoreFullHouse')">
               <td>Full House</td>
               <td></td>
             </tr>
             <tr
+              class="selectable"
               id="scoreFourOfAKind"
               onclick="handleRowClick('scoreFourOfAKind')"
             >
@@ -1071,6 +948,7 @@
               <td></td>
             </tr>
             <tr
+              class="selectable"
               id="scoreSmallStraight"
               onclick="handleRowClick('scoreSmallStraight')"
             >
@@ -1078,17 +956,18 @@
               <td></td>
             </tr>
             <tr
+              class="selectable"
               id="scoreBigStraight"
               onclick="handleRowClick('scoreBigStraight')"
             >
               <td>Big Straight</td>
               <td></td>
             </tr>
-            <tr id="scoreChoice" onclick="handleRowClick('scoreChoice')">
+            <tr class="selectable" id="scoreChoice" onclick="handleRowClick('scoreChoice')">
               <td>Choice</td>
               <td></td>
             </tr>
-            <tr id="scoreYacht" onclick="handleRowClick('scoreYacht')">
+            <tr class="selectable" id="scoreYacht" onclick="handleRowClick('scoreYacht')">
               <td style="border-bottom: 1px solid #7f849c">Yacht</td>
               <td style="border-bottom: 1px solid #7f849c"></td>
             </tr>
@@ -1105,35 +984,30 @@
         </div>
         <div id="diceKeep">
           <img
-            class="dice-keep-0"
             id="diceKeep0"
             src="none.svg"
             width="64"
             onclick="handleDiceKeepClick(0)"
           />
           <img
-            class="dice-keep-1"
             id="diceKeep1"
             src="none.svg"
             width="64"
             onclick="handleDiceKeepClick(1)"
           />
           <img
-            class="dice-keep-2"
             id="diceKeep2"
             src="none.svg"
             width="64"
             onclick="handleDiceKeepClick(2)"
           />
           <img
-            class="dice-keep-3"
             id="diceKeep3"
             src="none.svg"
             width="64"
             onclick="handleDiceKeepClick(3)"
           />
           <img
-            class="dice-keep-4"
             id="diceKeep4"
             src="none.svg"
             width="64"
@@ -1142,35 +1016,30 @@
         </div>
         <div id="dice">
           <img
-            class="dice-0"
             id="dice0"
             src="none.svg"
             width="96"
             onclick="handleDiceClick(0)"
           />
           <img
-            class="dice-1"
             id="dice1"
             src="none.svg"
             width="96"
             onclick="handleDiceClick(1)"
           />
           <img
-            class="dice-2"
             id="dice2"
             src="none.svg"
             width="96"
             onclick="handleDiceClick(2)"
           />
           <img
-            class="dice-3"
             id="dice3"
             src="none.svg"
             width="96"
             onclick="handleDiceClick(3)"
           />
           <img
-            class="dice-4"
             id="dice4"
             src="none.svg"
             width="96"
@@ -1179,7 +1048,7 @@
         </div>
         <div>
           <button class="roll-dice" id="rollDice" onclick="handleRollClick()">
-            Roll dice
+            Roll dice (2)
           </button>
         </div>
       </div>
