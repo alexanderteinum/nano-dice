@@ -469,6 +469,55 @@
         return true;
       }
 
+      function handleDiceClick(index) {
+        if (index >= getDicesCount()) return;
+        activeDice = index;
+        keepCurrentDice();
+        refreshAll();
+      }
+
+      function handleDiceKeepClick(index) {
+        if (index >= getDicesKeepCount()) return;
+        activeDiceKeep = index;
+        releaseCurrentDice();
+        refreshAll();
+      }
+
+      function handleRowClick(rowId) {
+        const rowIndex = TABLE_ROWS_SELECTABLE.indexOf(rowId);
+        if (rowIndex === -1 || scores[rowId] !== null) return;
+        
+        if (mode === MODE_CHOOSE_SCORE || mode === MODE_DICES || mode === MODE_DICES_KEEP) {
+          selectedTableRow = rowIndex;
+          chooseScore();
+          if (isEndOfGame()) {
+            mode = MODE_END_GAME;
+            gsap.fromTo(".end-of-game", { y: -100, opacity: 0 }, { y: 0, opacity: 1, duration: 1 });
+          } else {
+            mode = MODE_NONE;
+          }
+          refreshAll();
+        }
+      }
+
+      function handleRollClick() {
+        if (mode == MODE_END_GAME) {
+          initializeState();
+        } else if (mode === MODE_NONE) {
+          prepareNewRoll();
+        } else if (rollsLeft > 0) {
+          rollDice();
+        }
+        refreshAll();
+      }
+
+      function refreshAll() {
+        redrawTable();
+        redrawDicesKeep();
+        redrawDices();
+        redrawUI();
+      }
+
       function handleKeyDown(e) {
         switch (e.keyCode) {
           case KEY_LEFT:
@@ -568,10 +617,16 @@
       }
 
       function redrawUI() {
-        document.getElementById("rollDice").disabled =
-          rollsLeft === 0 && !(mode === MODE_NONE || mode === MODE_END_GAME);
-        document.getElementById("rollDice").innerText =
-          mode === MODE_END_GAME ? "Start new game" : "Roll dice";
+        const btn = document.getElementById("rollDice");
+        btn.disabled = rollsLeft === 0 && mode !== MODE_END_GAME && mode !== MODE_NONE;
+        
+        if (mode === MODE_END_GAME) {
+          btn.innerText = "Start new game";
+        } else if (mode === MODE_NONE) {
+          btn.innerText = "Next round";
+        } else {
+          btn.innerText = "Roll dice (" + rollsLeft + ")";
+        }
 
         if (isEndOfGame()) {
           document.getElementById("endOfGame").style.display = "block";
@@ -579,11 +634,9 @@
           document.getElementById("dice").style.display = "none";
         } else {
           document.getElementById("endOfGame").style.display = "none";
-          document.getElementById("diceKeep").style.display = "block";
-          document.getElementById("dice").style.display = "block";
+          document.getElementById("diceKeep").style.display = "flex";
+          document.getElementById("dice").style.display = "flex";
         }
-
-        document.getElementById("rollDice").style.display = "none";
       }
 
       function calculateSum() {
@@ -817,13 +870,28 @@
 
       @media (max-width: 768px) {
         body {
-          padding: 10px;
+          padding: 5px;
         }
 
         .main-container {
           flex-direction: column;
           align-items: center;
-          gap: 24px;
+          gap: 12px;
+          padding: 10px;
+        }
+
+        .game-area {
+          gap: 8px;
+        }
+
+        th, td {
+          padding: 2px 4px;
+          font-size: 12px;
+        }
+
+        button.roll-dice {
+          font-size: 20px;
+          padding: 4px 12px;
         }
 
         .end-of-game {
@@ -831,13 +899,13 @@
         }
 
         #dice img {
-          width: 16vw;
-          max-width: 64px;
+          width: 14vw;
+          max-width: 50px;
         }
 
         #diceKeep img {
-          width: 12vw;
-          max-width: 48px;
+          width: 10vw;
+          max-width: 38px;
         }
       }
 
@@ -853,6 +921,11 @@
         padding: 8px;
         background-color: #45475a;
         color: #cdd6f4;
+        cursor: pointer;
+      }
+
+      #dice img, #diceKeep img, tbody tr {
+        cursor: pointer;
       }
 
       button.roll-dice:disabled {
@@ -931,27 +1004,27 @@
             </tr>
           </thead>
           <tbody>
-            <tr id="scoreOnes">
+            <tr id="scoreOnes" onclick="handleRowClick('scoreOnes')">
               <td>Ones</td>
               <td></td>
             </tr>
-            <tr id="scoreTwos">
+            <tr id="scoreTwos" onclick="handleRowClick('scoreTwos')">
               <td>Twos</td>
               <td></td>
             </tr>
-            <tr id="scoreThrees">
+            <tr id="scoreThrees" onclick="handleRowClick('scoreThrees')">
               <td>Threes</td>
               <td></td>
             </tr>
-            <tr id="scoreFours">
+            <tr id="scoreFours" onclick="handleRowClick('scoreFours')">
               <td>Fours</td>
               <td></td>
             </tr>
-            <tr id="scoreFives">
+            <tr id="scoreFives" onclick="handleRowClick('scoreFives')">
               <td>Fives</td>
               <td></td>
             </tr>
-            <tr id="scoreSixes">
+            <tr id="scoreSixes" onclick="handleRowClick('scoreSixes')">
               <td style="border-bottom: 1px solid #7f849c">Sixes</td>
               <td style="border-bottom: 1px solid #7f849c"></td>
             </tr>
@@ -963,27 +1036,27 @@
               <td style="border-bottom: 1px solid #7f849c">Bonus</td>
               <td style="border-bottom: 1px solid #7f849c"></td>
             </tr>
-            <tr id="scoreFullHouse">
+            <tr id="scoreFullHouse" onclick="handleRowClick('scoreFullHouse')">
               <td>Full House</td>
               <td></td>
             </tr>
-            <tr id="scoreFourOfAKind">
+            <tr id="scoreFourOfAKind" onclick="handleRowClick('scoreFourOfAKind')">
               <td>4 of a Kind</td>
               <td></td>
             </tr>
-            <tr id="scoreSmallStraight">
+            <tr id="scoreSmallStraight" onclick="handleRowClick('scoreSmallStraight')">
               <td>Small Straight</td>
               <td></td>
             </tr>
-            <tr id="scoreBigStraight">
+            <tr id="scoreBigStraight" onclick="handleRowClick('scoreBigStraight')">
               <td>Big Straight</td>
               <td></td>
             </tr>
-            <tr id="scoreChoice">
+            <tr id="scoreChoice" onclick="handleRowClick('scoreChoice')">
               <td>Choice</td>
               <td></td>
             </tr>
-            <tr id="scoreYacht">
+            <tr id="scoreYacht" onclick="handleRowClick('scoreYacht')">
               <td style="border-bottom: 1px solid #7f849c">Yacht</td>
               <td style="border-bottom: 1px solid #7f849c"></td>
             </tr>
@@ -999,21 +1072,21 @@
           Well done!
         </div>
         <div id="diceKeep">
-          <img class="dice-keep-0" id="diceKeep0" src="none.svg" width="64" />
-          <img class="dice-keep-1" id="diceKeep1" src="none.svg" width="64" />
-          <img class="dice-keep-2" id="diceKeep2" src="none.svg" width="64" />
-          <img class="dice-keep-3" id="diceKeep3" src="none.svg" width="64" />
-          <img class="dice-keep-4" id="diceKeep4" src="none.svg" width="64" />
+          <img class="dice-keep-0" id="diceKeep0" src="none.svg" width="64" onclick="handleDiceKeepClick(0)" />
+          <img class="dice-keep-1" id="diceKeep1" src="none.svg" width="64" onclick="handleDiceKeepClick(1)" />
+          <img class="dice-keep-2" id="diceKeep2" src="none.svg" width="64" onclick="handleDiceKeepClick(2)" />
+          <img class="dice-keep-3" id="diceKeep3" src="none.svg" width="64" onclick="handleDiceKeepClick(3)" />
+          <img class="dice-keep-4" id="diceKeep4" src="none.svg" width="64" onclick="handleDiceKeepClick(4)" />
         </div>
         <div id="dice">
-          <img class="dice-0" id="dice0" src="none.svg" width="96" />
-          <img class="dice-1" id="dice1" src="none.svg" width="96" />
-          <img class="dice-2" id="dice2" src="none.svg" width="96" />
-          <img class="dice-3" id="dice3" src="none.svg" width="96" />
-          <img class="dice-4" id="dice4" src="none.svg" width="96" />
+          <img class="dice-0" id="dice0" src="none.svg" width="96" onclick="handleDiceClick(0)" />
+          <img class="dice-1" id="dice1" src="none.svg" width="96" onclick="handleDiceClick(1)" />
+          <img class="dice-2" id="dice2" src="none.svg" width="96" onclick="handleDiceClick(2)" />
+          <img class="dice-3" id="dice3" src="none.svg" width="96" onclick="handleDiceClick(3)" />
+          <img class="dice-4" id="dice4" src="none.svg" width="96" onclick="handleDiceClick(4)" />
         </div>
         <div>
-          <button class="roll-dice" id="rollDice">Roll dice</button>
+          <button class="roll-dice" id="rollDice" onclick="handleRollClick()">Roll dice</button>
         </div>
       </div>
     </div>
