@@ -111,7 +111,7 @@
         gsap.fromTo(
           "#dice img",
           { y: -100, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.2, stagger: 0.05 }
+          { y: 0, opacity: 1, duration: 0.2, stagger: 0.05 },
         );
       }
 
@@ -162,7 +162,7 @@
         gsap.fromTo(
           "#dice img",
           { opacity: 0 },
-          { opacity: 1, duration: 1, stagger: 0.1 }
+          { opacity: 1, duration: 1, stagger: 0.1 },
         );
       }
 
@@ -758,6 +758,11 @@
         margin: 0;
       }
 
+      body,
+      button {
+        font-family: "Inter";
+      }
+
       .main-container {
         display: flex;
         max-width: 896px;
@@ -804,20 +809,15 @@
           font-size: 48px !important;
         }
 
-        #dice img {
+        .dice img {
           width: 14vw;
           max-width: 50px;
         }
 
-        #diceKeep img {
+        .dice-keep img {
           width: 10vw;
           max-width: 38px;
         }
-      }
-
-      body,
-      button {
-        font-family: "Inter"
       }
 
       button.roll-dice {
@@ -830,14 +830,14 @@
         cursor: pointer;
       }
 
-      #diceKeep img,
-      #dice img,
-      tbody tr.selectable {
-        cursor: pointer;
-      }
-
       button.roll-dice:disabled {
         color: #6c7086;
+      }
+
+      .dice-keep img,
+      .dice img,
+      tbody tr.selectable {
+        cursor: pointer;
       }
 
       table {
@@ -894,48 +894,72 @@
         <table>
           <thead>
             <tr>
-              <th style="border-bottom: 1px solid #7f849c">
-                Roll
-              </th>
-              <th style="border-bottom: 1px solid #7f849c">
-                Score
-              </th>
+              <th style="border-bottom: 1px solid #7f849c">Roll</th>
+              <th style="border-bottom: 1px solid #7f849c">Score</th>
             </tr>
           </thead>
           <tbody>
-            <tr class="selectable" id="scoreOnes" onclick="handleRowClick('scoreOnes')">
+            <tr
+              class="selectable"
+              id="scoreOnes"
+              onclick="handleRowClick('scoreOnes')"
+            >
               <td>Ones</td>
               <td></td>
             </tr>
-            <tr class="selectable" id="scoreTwos" onclick="handleRowClick('scoreTwos')">
+            <tr
+              class="selectable"
+              id="scoreTwos"
+              onclick="handleRowClick('scoreTwos')"
+            >
               <td>Twos</td>
               <td></td>
             </tr>
-            <tr class="selectable" id="scoreThrees" onclick="handleRowClick('scoreThrees')">
+            <tr
+              class="selectable"
+              id="scoreThrees"
+              onclick="handleRowClick('scoreThrees')"
+            >
               <td>Threes</td>
               <td></td>
             </tr>
-            <tr class="selectable" id="scoreFours" onclick="handleRowClick('scoreFours')">
+            <tr
+              class="selectable"
+              id="scoreFours"
+              onclick="handleRowClick('scoreFours')"
+            >
               <td>Fours</td>
               <td></td>
             </tr>
-            <tr class="selectable" id="scoreFives" onclick="handleRowClick('scoreFives')">
+            <tr
+              class="selectable"
+              id="scoreFives"
+              onclick="handleRowClick('scoreFives')"
+            >
               <td>Fives</td>
               <td></td>
             </tr>
-            <tr class="selectable" id="scoreSixes" onclick="handleRowClick('scoreSixes')">
+            <tr
+              class="selectable"
+              id="scoreSixes"
+              onclick="handleRowClick('scoreSixes')"
+            >
               <td style="border-bottom: 1px solid #7f849c">Sixes</td>
               <td style="border-bottom: 1px solid #7f849c"></td>
             </tr>
             <tr id="scoreSum">
               <td>Sum</td>
-              <td class="sum">4/63</td>
+              <td class="sum"></td>
             </tr>
             <tr id="scoreBonus">
               <td style="border-bottom: 1px solid #7f849c">Bonus</td>
               <td style="border-bottom: 1px solid #7f849c"></td>
             </tr>
-            <tr class="selectable" id="scoreFullHouse" onclick="handleRowClick('scoreFullHouse')">
+            <tr
+              class="selectable"
+              id="scoreFullHouse"
+              onclick="handleRowClick('scoreFullHouse')"
+            >
               <td>Full House</td>
               <td></td>
             </tr>
@@ -963,11 +987,19 @@
               <td>Big Straight</td>
               <td></td>
             </tr>
-            <tr class="selectable" id="scoreChoice" onclick="handleRowClick('scoreChoice')">
+            <tr
+              class="selectable"
+              id="scoreChoice"
+              onclick="handleRowClick('scoreChoice')"
+            >
               <td>Choice</td>
               <td></td>
             </tr>
-            <tr class="selectable" id="scoreYacht" onclick="handleRowClick('scoreYacht')">
+            <tr
+              class="selectable"
+              id="scoreYacht"
+              onclick="handleRowClick('scoreYacht')"
+            >
               <td style="border-bottom: 1px solid #7f849c">Yacht</td>
               <td style="border-bottom: 1px solid #7f849c"></td>
             </tr>
@@ -982,7 +1014,7 @@
         <div class="end-of-game" id="endOfGame" style="display: none">
           Well done!
         </div>
-        <div id="diceKeep">
+        <div class="dice-keep" id="diceKeep">
           <img
             id="diceKeep0"
             src="none.svg"
@@ -1014,7 +1046,7 @@
             onclick="handleDiceKeepClick(4)"
           />
         </div>
-        <div id="dice">
+        <div class="dice" id="dice">
           <img
             id="dice0"
             src="none.svg"
