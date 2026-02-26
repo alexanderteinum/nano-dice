@@ -98,8 +98,14 @@
       let dice;
       let activeDie;
       let rollsLeft;
+      let highScore = 0;
 
       function handleLoad() {
+        const storedHighScore = localStorage.getItem("keyYachtHighScore");
+        if (storedHighScore) {
+          highScore = parseInt(storedHighScore, 10);
+        }
+
         initializeGame();
         refreshAll();
       }
@@ -397,6 +403,20 @@
         const row = TABLE_ROWS_SELECTABLE[selectedTableRow];
         scores[row] = scoreCalculators[row](dice);
 
+        if (isEndOfGame()) {
+          const finalScore = calculateTotal();
+          if (finalScore > highScore) {
+            highScore = finalScore;
+            localStorage.setItem("keyYachtHighScore", highScore);
+
+            gsap.fromTo(
+              "#highScoreDisplay",
+              { color: "var(--text)", scale: 1.1 },
+              { color: "var(--overlay0)", scale: 1, duration: 1, delay: 0.5 },
+            );
+          }
+        }
+
         gsap.fromTo(
           "#" + TABLE_ROWS_SELECTABLE[selectedTableRow],
           { y: -10, opacity: 0 },
@@ -446,6 +466,9 @@
           bonus === null ? "" : bonus;
         document.getElementById(SCORE_TOTAL).children[1].innerHTML =
           calculateTotal();
+
+        document.getElementById("highScoreValue").innerText =
+          highScore > 0 ? highScore : "–";
       }
 
       function showSuggestion(row) {
@@ -966,6 +989,12 @@
         transition: color 0.3s;
       }
 
+      .high-score-display {
+        font-size: 12px;
+        color: var(--overlay0);
+        margin-top: 8px;
+      }
+
       .end-of-game {
         font-size: 96px;
       }
@@ -1276,6 +1305,9 @@
             </tr>
           </tbody>
         </table>
+        <div id="highScoreDisplay" class="high-score-display">
+          high score: <span id="highScoreValue">-</span>
+        </div>
       </div>
       <div class="game-area">
         <div class="end-of-game" id="endOfGame" style="display: none">
