@@ -23,6 +23,7 @@
       const KEY_DOWN = 40;
       const KEY_ENTER = 13;
       const KEY_SPACE = 32;
+      const KEY_T = 84;
 
       const SCORE_ONES = "scoreOnes";
       const SCORE_TWOS = "scoreTwos";
@@ -229,6 +230,22 @@
         refreshAll();
       }
 
+      function toggleTheme() {
+        const root = document.documentElement;
+        const currentTheme = root.getAttribute("data-theme");
+
+        if (currentTheme === "dark") {
+          root.setAttribute("data-theme", "light");
+        } else if (currentTheme === "light") {
+          root.setAttribute("data-theme", "dark");
+        } else {
+          const prefersLight = window.matchMedia(
+            "(prefers-color-scheme: light)",
+          ).matches;
+          root.setAttribute("data-theme", prefersLight ? "dark" : "light");
+        }
+      }
+
       function handleKeyDown(e) {
         switch (e.keyCode) {
           case KEY_LEFT:
@@ -316,6 +333,10 @@
             }
             e.preventDefault();
             break;
+          case KEY_T:
+            toggleTheme();
+            e.preventDefault();
+            break;
         }
         refreshAll();
       }
@@ -396,7 +417,7 @@
             TABLE_ROWS_SELECTABLE[i],
           ).style.backgroundColor =
             mode === MODE_CHOOSE_SCORE && i === selectedTableRow
-              ? "#494d64"
+              ? "var(--surface1)"
               : "";
         }
 
@@ -433,7 +454,7 @@
           const diceElem = document.getElementById("diceKeep" + i);
 
           if (mode === MODE_DICE_KEEP && i == activeDieKeep) {
-            diceElem.style.backgroundColor = "#494d64";
+            diceElem.style.backgroundColor = "var(--surface1)";
             diceElem.style.borderRadius = "16px";
           } else {
             diceElem.style.backgroundColor = "transparent";
@@ -452,7 +473,7 @@
           const diceElem = document.getElementById("dice" + i);
 
           if (mode === MODE_DICE && i == activeDie) {
-            diceElem.style.backgroundColor = "#494d64";
+            diceElem.style.backgroundColor = "var(--surface1)";
             diceElem.style.borderRadius = "24px";
           } else {
             diceElem.style.backgroundColor = "transparent";
@@ -645,18 +666,75 @@
       });
     </script>
     <style>
+      :root {
+        --base: #24273a;
+        --text: #cad3f5;
+        --surface0: #363a4f;
+        --surface1: #494d64;
+        --overlay0: #6e738d;
+        --overlay1: #8087a2;
+        --mantle: #1e2030;
+        --subtext0: #a5adcb;
+        --blue: #8aadf4;
+        --lavender: #b7bdf8;
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root {
+          --base: #eff1f5;
+          --text: #4c4f69;
+          --surface0: #ccd0da;
+          --surface1: #bcc0cc;
+          --overlay0: #9ca0b0;
+          --overlay1: #8c8fa1;
+          --mantle: #e6e9ef;
+          --subtext0: #5c5f77;
+          --blue: #1e66f5;
+          --lavender: #7287fd;
+        }
+      }
+
+      :root[data-theme="dark"] {
+        --base: #24273a;
+        --text: #cad3f5;
+        --surface0: #363a4f;
+        --surface1: #494d64;
+        --overlay0: #6e738d;
+        --overlay1: #8087a2;
+        --mantle: #1e2030;
+        --subtext0: #a5adcb;
+        --blue: #8aadf4;
+        --lavender: #b7bdf8;
+      }
+
+      :root[data-theme="light"] {
+        --base: #eff1f5;
+        --text: #4c4f69;
+        --surface0: #ccd0da;
+        --surface1: #bcc0cc;
+        --overlay0: #9ca0b0;
+        --overlay1: #8c8fa1;
+        --mantle: #e6e9ef;
+        --subtext0: #5c5f77;
+        --blue: #1e66f5;
+        --lavender: #7287fd;
+      }
+
       * {
         box-sizing: border-box;
       }
 
       body {
-        background-color: #24273a;
-        color: #cad3f5;
+        background-color: var(--base);
+        color: var(--text);
         display: flex;
         align-items: center;
         justify-content: center;
         min-height: 100vh;
         margin: 0;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
       }
 
       body,
@@ -727,13 +805,16 @@
         border: 0;
         border-radius: 8px;
         padding: 16px;
-        background-color: #363a4f;
-        color: #cad3f5;
+        background-color: var(--surface0);
+        color: var(--text);
         cursor: pointer;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
       }
 
       button.roll-dice:disabled {
-        color: #6e738d;
+        color: var(--overlay0);
       }
 
       .dice-keep svg,
@@ -753,10 +834,11 @@
 
       th,
       td {
-        border: 1px solid #494d64;
+        border: 1px solid var(--surface1);
         padding: 4px;
         font-size: 14px;
         width: 50%;
+        transition: border-color 0.3s;
       }
 
       td.sum {
@@ -782,7 +864,8 @@
       }
 
       .suggestion {
-        color: #6e738d;
+        color: var(--overlay0);
+        transition: color 0.3s;
       }
 
       .end-of-game {
@@ -799,24 +882,25 @@
       .info-button {
         width: 32px;
         height: 32px;
-        color: #6e738d;
+        color: var(--overlay0);
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 600;
         cursor: pointer;
         user-select: none;
+        transition: color 0.3s;
       }
 
       .info-button:hover {
-        color: #cad3f5;
+        color: var(--text);
       }
 
       .info-panel {
         position: absolute;
         bottom: 40px;
         right: 0;
-        background-color: #1e2030;
+        background-color: var(--mantle);
         padding: 16px 20px;
         border-radius: 12px;
         width: max-content;
@@ -825,9 +909,10 @@
         transform: translateY(5px);
         transition:
           opacity 0.2s,
-          transform 0.2s;
+          transform 0.2s,
+          background-color 0.3s;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        color: #a5adcb;
+        color: var(--subtext0);
         font-size: 13px;
         display: flex;
         flex-direction: column;
@@ -848,19 +933,19 @@
       }
 
       .info-panel strong {
-        color: #cad3f5;
+        color: var(--text);
         font-weight: 600;
       }
 
       .info-panel a {
-        color: #8aadf4;
+        color: var(--blue);
         text-decoration: none;
         margin-top: 4px;
         transition: color 0.2s;
       }
 
       .info-panel a:hover {
-        color: #b7bdf8;
+        color: var(--lavender);
       }
 
       @media (max-width: 768px) {
@@ -978,8 +1063,8 @@
         <table>
           <thead>
             <tr>
-              <th style="border-bottom: 1px solid #8087a2">Roll</th>
-              <th style="border-bottom: 1px solid #8087a2">Score</th>
+              <th style="border-bottom: 1px solid var(--overlay1)">Roll</th>
+              <th style="border-bottom: 1px solid var(--overlay1)">Score</th>
             </tr>
           </thead>
           <tbody>
@@ -1028,16 +1113,16 @@
               id="scoreSixes"
               onclick="handleRowClick('scoreSixes')"
             >
-              <td style="border-bottom: 1px solid #8087a2">Sixes</td>
-              <td style="border-bottom: 1px solid #8087a2"></td>
+              <td style="border-bottom: 1px solid var(--overlay1)">Sixes</td>
+              <td style="border-bottom: 1px solid var(--overlay1)"></td>
             </tr>
             <tr id="scoreSum">
               <td>Sum</td>
               <td class="sum"></td>
             </tr>
             <tr id="scoreBonus">
-              <td style="border-bottom: 1px solid #8087a2">Bonus</td>
-              <td style="border-bottom: 1px solid #8087a2"></td>
+              <td style="border-bottom: 1px solid var(--overlay1)">Bonus</td>
+              <td style="border-bottom: 1px solid var(--overlay1)"></td>
             </tr>
             <tr
               class="selectable"
@@ -1084,8 +1169,8 @@
               id="scoreYacht"
               onclick="handleRowClick('scoreYacht')"
             >
-              <td style="border-bottom: 1px solid #8087a2">Yacht</td>
-              <td style="border-bottom: 1px solid #8087a2"></td>
+              <td style="border-bottom: 1px solid var(--overlay1)">Yacht</td>
+              <td style="border-bottom: 1px solid var(--overlay1)"></td>
             </tr>
             <tr id="scoreTotal">
               <td>Total</td>
@@ -1196,6 +1281,7 @@
         <p><strong>Arrows</strong> Navigate</p>
         <p><strong>Space</strong> Keep / Release</p>
         <p><strong>Enter</strong> Roll / Confirm</p>
+        <p><strong>T</strong> Toggle theme</p>
         <a href="https://ko-fi.com/alexanderteinum" target="_blank"
           >☕ Buy me a coffee</a
         >
