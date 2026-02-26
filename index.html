@@ -11,10 +11,10 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
     <script>
-      const MODE_END_ROUND = 0;
-      const MODE_CHOOSE_SCORE = 1;
-      const MODE_DICES_KEEP = 2;
-      const MODE_DICES = 3;
+      const MODE_DICE = 0;
+      const MODE_DICE_KEEP = 1;
+      const MODE_CHOOSE_SCORE = 2;
+      const MODE_END_ROUND = 3;
       const MODE_END_GAME = 4;
 
       const KEY_LEFT = 37;
@@ -32,11 +32,11 @@
       const SCORE_SIXES = "scoreSixes";
       const SCORE_SUM = "scoreSum";
       const SCORE_BONUS = "scoreBonus";
-      const SCORE_FULL_HOUSE = "scoreFullHouse";
+      const SCORE_CHOICE = "scoreChoice";
       const SCORE_FOUR_OF_A_KIND = "scoreFourOfAKind";
+      const SCORE_FULL_HOUSE = "scoreFullHouse";
       const SCORE_SMALL_STRAIGHT = "scoreSmallStraight";
       const SCORE_BIG_STRAIGHT = "scoreBigStraight";
-      const SCORE_CHOICE = "scoreChoice";
       const SCORE_YACHT = "scoreYacht";
       const SCORE_TOTAL = "scoreTotal";
 
@@ -49,11 +49,11 @@
         SCORE_SIXES,
         SCORE_SUM,
         SCORE_BONUS,
-        SCORE_FULL_HOUSE,
+        SCORE_CHOICE,
         SCORE_FOUR_OF_A_KIND,
+        SCORE_FULL_HOUSE,
         SCORE_SMALL_STRAIGHT,
         SCORE_BIG_STRAIGHT,
-        SCORE_CHOICE,
         SCORE_YACHT,
         SCORE_TOTAL,
       ];
@@ -65,26 +65,26 @@
         SCORE_FOURS,
         SCORE_FIVES,
         SCORE_SIXES,
-        SCORE_FULL_HOUSE,
+        SCORE_CHOICE,
         SCORE_FOUR_OF_A_KIND,
+        SCORE_FULL_HOUSE,
         SCORE_SMALL_STRAIGHT,
         SCORE_BIG_STRAIGHT,
-        SCORE_CHOICE,
         SCORE_YACHT,
       ];
 
       const scoreCalculators = {
-        [SCORE_ONES]: (dices) => getNumbersScore(dices, 1),
-        [SCORE_TWOS]: (dices) => getNumbersScore(dices, 2),
-        [SCORE_THREES]: (dices) => getNumbersScore(dices, 3),
-        [SCORE_FOURS]: (dices) => getNumbersScore(dices, 4),
-        [SCORE_FIVES]: (dices) => getNumbersScore(dices, 5),
-        [SCORE_SIXES]: (dices) => getNumbersScore(dices, 6),
-        [SCORE_FULL_HOUSE]: getFullHouseScore,
+        [SCORE_ONES]: (dice) => getNumbersScore(dice, 1),
+        [SCORE_TWOS]: (dice) => getNumbersScore(dice, 2),
+        [SCORE_THREES]: (dice) => getNumbersScore(dice, 3),
+        [SCORE_FOURS]: (dice) => getNumbersScore(dice, 4),
+        [SCORE_FIVES]: (dice) => getNumbersScore(dice, 5),
+        [SCORE_SIXES]: (dice) => getNumbersScore(dice, 6),
+        [SCORE_CHOICE]: getChoiceScore,
         [SCORE_FOUR_OF_A_KIND]: getFourOfAKindScore,
+        [SCORE_FULL_HOUSE]: getFullHouseScore,
         [SCORE_SMALL_STRAIGHT]: getSmallStraightScore,
         [SCORE_BIG_STRAIGHT]: getBigStraightScore,
-        [SCORE_CHOICE]: getChoiceScore,
         [SCORE_YACHT]: getYahtzeeScore,
       };
 
@@ -92,65 +92,63 @@
       let mode;
       let lastDiceMode;
       let selectedTableRow;
-      let dicesKeep;
-      let activeDiceKeep;
-      let dices;
-      let activeDice;
+      let diceKeep;
+      let activeDieKeep;
+      let dice;
+      let activeDie;
       let rollsLeft;
+
+      function handleLoad() {
+        initializeGame();
+        refreshAll();
+      }
 
       function initializeGame() {
         scores = {};
         for (let i = 0; i < TABLE_ROWS_SELECTABLE.length; i++) {
           scores[TABLE_ROWS_SELECTABLE[i]] = null;
         }
-
         initializeRound();
       }
 
       function initializeRound() {
-        mode = MODE_DICES;
-        lastDiceMode = MODE_DICES;
+        mode = MODE_DICE;
+        lastDiceMode = MODE_DICE;
         selectedTableRow = 0;
-        dicesKeep = [null, null, null, null, null];
-        activeDiceKeep = 0;
-        dices = [
+        diceKeep = [null, null, null, null, null];
+        activeDieKeep = 0;
+        dice = [
           randomIntFromInterval(1, 6),
           randomIntFromInterval(1, 6),
           randomIntFromInterval(1, 6),
           randomIntFromInterval(1, 6),
           randomIntFromInterval(1, 6),
         ];
-        activeDice = 0;
+        activeDie = 0;
         rollsLeft = 2;
 
         gsap.fromTo(
-          "#dice img",
+          ".dice img",
           { y: -100, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.2, stagger: 0.05 },
         );
       }
 
       function rollDice() {
-        if (rollsLeft === 0) {
-          return;
-        }
+        if (rollsLeft === 0) return;
 
         let rolled = 0;
-
         for (let i = 0; i < 5; i++) {
-          if (dices[i] === null) {
-            continue;
-          }
+          if (dice[i] === null) continue;
 
-          dices[i] = randomIntFromInterval(1, 6);
+          dice[i] = randomIntFromInterval(1, 6);
           if (rollsLeft > 1) {
             gsap.fromTo(
-              "#dice img:nth-child(" + (i + 1) + ")",
+              ".dice img:nth-child(" + (i + 1) + ")",
               { y: -200, opacity: 0 },
               { y: 0, opacity: 1, duration: 0.2, delay: rolled * 0.05 },
             );
           }
-
           rolled++;
         }
 
@@ -164,203 +162,34 @@
 
       function finishRound(animate) {
         for (let i = 0; i < 5; i++) {
-          if (dicesKeep[i] === null) continue;
+          if (diceKeep[i] === null) continue;
 
-          dices[getDicesCount()] = dicesKeep[i];
-          dicesKeep[i] = null;
+          dice[getDiceCount()] = diceKeep[i];
+          diceKeep[i] = null;
         }
 
-        dices.sort();
+        dice.sort();
 
-        if (!animate) return;
-
-        gsap.fromTo(
-          "#dice img",
-          { opacity: 0 },
-          { opacity: 1, duration: 1, stagger: 0.1 },
-        );
-      }
-
-      function randomIntFromInterval(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min);
-      }
-
-      function getDicesKeepCount() {
-        return dicesKeep.filter((d) => d !== null).length;
-      }
-
-      function getDicesCount() {
-        return dices.filter((d) => d !== null).length;
-      }
-
-      function keepCurrentDice() {
-        for (let i = 0; i < 5; i++) {
-          if (dicesKeep[i] === null) {
-            dicesKeep[i] = dices[activeDice];
-            gsap.fromTo(
-              "#diceKeep img:nth-child(" + (i + 1) + ")",
-              { y: 50, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.2 },
-            );
-            break;
-          }
-        }
-
-        dices.splice(activeDice, 1);
-        dices[4] = null;
-        activeDice = Math.max(Math.min(activeDice, getDicesCount() - 1), 0);
-
-        if (getDicesCount() === 0) {
-          activeDiceKeep = 0;
-          mode = MODE_DICES_KEEP;
-          lastDiceMode = MODE_DICES_KEEP;
+        if (animate) {
+          gsap.fromTo(
+            ".dice img",
+            { opacity: 0 },
+            { opacity: 1, duration: 1, stagger: 0.1 },
+          );
         }
       }
 
-      function releaseCurrentDice() {
-        for (let i = 0; i < 5; i++) {
-          if (dices[i] === null) {
-            dices[i] = dicesKeep[activeDiceKeep];
-            gsap.fromTo(
-              "#dice img:nth-child(" + (i + 1) + ")",
-              { y: -50, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.2 },
-            );
-            break;
-          }
-        }
-
-        dicesKeep.splice(activeDiceKeep, 1);
-        dicesKeep[4] = null;
-
-        if (getDicesKeepCount() === 0) {
-          activeDiceKeep = 0;
-          activeDice = 0;
-          mode = MODE_DICES;
-          lastDiceMode = MODE_DICES;
-        } else {
-          activeDiceKeep = Math.min(activeDiceKeep, getDicesKeepCount() - 1);
-        }
-      }
-
-      function isYahtzee(dices) {
-        return new Set(dices).size === 1;
-      }
-
-      function isFourOfAKind(dices) {
-        const counts = {};
-        for (const die of dices) {
-          counts[die] = (counts[die] || 0) + 1;
-        }
-        return Object.values(counts).some((count) => count >= 4);
-      }
-
-      function isFullHouse(dices) {
-        const counts = {};
-        for (const die of dices) {
-          counts[die] = (counts[die] || 0) + 1;
-        }
-        const values = Object.values(counts);
-        return values.includes(3) && values.includes(2);
-      }
-
-      function isSmallStraight(dices) {
-        const sorted = [...new Set(dices)].sort((a, b) => a - b);
-        const str = sorted.join("");
-
-        return (
-          str.includes("1234") || str.includes("2345") || str.includes("3456")
-        );
-      }
-
-      function isBigStraight(dices) {
-        const sorted = [...new Set(dices)].sort((a, b) => a - b);
-        const str = sorted.join("");
-
-        return str === "12345" || str === "23456";
-      }
-
-      function getNumbersScore(dice, targetNumber) {
-        return dice
-          .filter((d) => d === targetNumber)
-          .reduce((s, d) => s + d, 0);
-      }
-
-      function getFullHouseScore(dice) {
-        return isFullHouse(dice) ? dice.reduce((a, b) => a + b, 0) : 0;
-      }
-
-      function getFourOfAKindScore(dice) {
-        return isFourOfAKind(dice) ? dice.reduce((a, b) => a + b, 0) : 0;
-      }
-
-      function getSmallStraightScore(dice) {
-        return isSmallStraight(dice) ? 15 : 0;
-      }
-
-      function getBigStraightScore(dice) {
-        return isBigStraight(dice) ? 30 : 0;
-      }
-
-      function getChoiceScore(dice) {
-        return dice.reduce((sum, d) => sum + d, 0);
-      }
-
-      function getYahtzeeScore(dice) {
-        return isYahtzee(dice) ? 50 : 0;
-      }
-
-      function chooseScore() {
-        finishRound(rollsLeft > 0);
-
-        const row = TABLE_ROWS_SELECTABLE[selectedTableRow];
-        scores[row] = scoreCalculators[row](dices);
-
-        gsap.fromTo(
-          "#" + TABLE_ROWS_SELECTABLE[selectedTableRow],
-          { y: -10, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.2 },
-        );
-      }
-
-      function getPreviousSelectedTableRow() {
-        return (
-          (selectedTableRow - 1 + TABLE_ROWS_SELECTABLE.length) %
-          TABLE_ROWS_SELECTABLE.length
-        );
-      }
-
-      function getNextSelectedTableRow() {
-        return (selectedTableRow + 1) % TABLE_ROWS_SELECTABLE.length;
-      }
-
-      function setSelectedTableRowOnModeChange() {
-        selectedTableRow = 0;
-
-        while (scores[TABLE_ROWS_SELECTABLE[selectedTableRow]] !== null) {
-          selectedTableRow = getNextSelectedTableRow();
-        }
-      }
-
-      function isEndOfGame() {
-        for (let i = 0; i < TABLE_ROWS_SELECTABLE.length; i++) {
-          if (scores[TABLE_ROWS_SELECTABLE[i]] === null) return false;
-        }
-
-        return true;
-      }
-
-      function handleDiceClick(index) {
-        if (index >= getDicesCount()) return;
-        activeDice = index;
-        keepCurrentDice();
+      function handleDieClick(index) {
+        if (index >= getDiceCount()) return;
+        activeDie = index;
+        keepCurrentDie();
         refreshAll();
       }
 
-      function handleDiceKeepClick(index) {
-        if (index >= getDicesKeepCount()) return;
-        activeDiceKeep = index;
-        releaseCurrentDice();
+      function handleDieKeepClick(index) {
+        if (index >= getDiceKeepCount()) return;
+        activeDieKeep = index;
+        releaseCurrentDie();
         refreshAll();
       }
 
@@ -370,8 +199,8 @@
 
         if (
           mode === MODE_CHOOSE_SCORE ||
-          mode === MODE_DICES ||
-          mode === MODE_DICES_KEEP
+          mode === MODE_DICE ||
+          mode === MODE_DICE_KEEP
         ) {
           selectedTableRow = rowIndex;
           chooseScore();
@@ -400,30 +229,21 @@
         refreshAll();
       }
 
-      function refreshAll() {
-        refreshTable();
-        refreshDicesKeep();
-        refreshDices();
-        refreshUI();
-      }
-
       function handleKeyDown(e) {
         switch (e.keyCode) {
           case KEY_LEFT:
-            if (mode === MODE_DICES_KEEP) {
-              if (activeDiceKeep === 0) {
+            if (mode === MODE_DICE_KEEP) {
+              if (activeDieKeep === 0) {
                 mode = MODE_CHOOSE_SCORE;
               } else {
-                activeDiceKeep =
-                  (activeDiceKeep - 1 + getDicesKeepCount()) %
-                  getDicesKeepCount(); // TODO: Math.max
+                activeDieKeep =
+                  (activeDieKeep - 1 + getDiceKeepCount()) % getDiceKeepCount();
               }
-            } else if (mode === MODE_DICES) {
-              if (activeDice === 0) {
+            } else if (mode === MODE_DICE) {
+              if (activeDie === 0) {
                 mode = MODE_CHOOSE_SCORE;
               } else {
-                activeDice =
-                  (activeDice - 1 + getDicesCount()) % getDicesCount(); // TODO: Math.max
+                activeDie = (activeDie - 1 + getDiceCount()) % getDiceCount();
               }
             }
             e.preventDefault();
@@ -431,10 +251,10 @@
           case KEY_RIGHT:
             if (mode === MODE_CHOOSE_SCORE && rollsLeft > 0) {
               mode = lastDiceMode;
-            } else if (mode === MODE_DICES_KEEP) {
-              activeDiceKeep = (activeDiceKeep + 1) % getDicesKeepCount();
-            } else if (mode === MODE_DICES) {
-              activeDice = (activeDice + 1) % getDicesCount();
+            } else if (mode === MODE_DICE_KEEP) {
+              activeDieKeep = (activeDieKeep + 1) % getDiceKeepCount();
+            } else if (mode === MODE_DICE) {
+              activeDie = (activeDie + 1) % getDiceCount();
             }
             e.preventDefault();
             break;
@@ -445,13 +265,12 @@
               } while (
                 scores[TABLE_ROWS_SELECTABLE[selectedTableRow]] !== null
               );
-            } else if (mode === MODE_DICES) {
-              mode = MODE_DICES_KEEP;
-              lastDiceMode = MODE_DICES_KEEP;
+            } else if (mode === MODE_DICE) {
+              mode = MODE_DICE_KEEP;
+              lastDiceMode = MODE_DICE_KEEP;
             }
             e.preventDefault();
             break;
-
           case KEY_DOWN:
             if (mode === MODE_CHOOSE_SCORE) {
               do {
@@ -459,10 +278,10 @@
               } while (
                 scores[TABLE_ROWS_SELECTABLE[selectedTableRow]] !== null
               );
-            } else if (mode === MODE_DICES_KEEP) {
-              if (dices.filter((a) => a === null).length < 5) {
-                mode = MODE_DICES;
-                lastDiceMode = MODE_DICES;
+            } else if (mode === MODE_DICE_KEEP) {
+              if (dice.filter((a) => a === null).length < 5) {
+                mode = MODE_DICE;
+                lastDiceMode = MODE_DICE;
               }
             }
             e.preventDefault();
@@ -490,20 +309,159 @@
             e.preventDefault();
             break;
           case KEY_SPACE:
-            if (mode === MODE_DICES_KEEP) {
-              releaseCurrentDice();
-            } else if (mode === MODE_DICES) {
-              keepCurrentDice();
+            if (mode === MODE_DICE_KEEP) {
+              releaseCurrentDie();
+            } else if (mode === MODE_DICE) {
+              keepCurrentDie();
             }
             e.preventDefault();
             break;
         }
+        refreshAll();
+      }
 
+      function keepCurrentDie() {
+        for (let i = 0; i < 5; i++) {
+          if (diceKeep[i] === null) {
+            diceKeep[i] = dice[activeDie];
+            gsap.fromTo(
+              ".dice-keep img:nth-child(" + (i + 1) + ")",
+              { y: 50, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.2 },
+            );
+            break;
+          }
+        }
+
+        dice.splice(activeDie, 1);
+        dice[4] = null;
+        activeDie = Math.max(Math.min(activeDie, getDiceCount() - 1), 0);
+
+        if (getDiceCount() === 0) {
+          activeDieKeep = 0;
+          mode = MODE_DICE_KEEP;
+          lastDiceMode = MODE_DICE_KEEP;
+        }
+      }
+
+      function releaseCurrentDie() {
+        for (let i = 0; i < 5; i++) {
+          if (dice[i] === null) {
+            dice[i] = diceKeep[activeDieKeep];
+            gsap.fromTo(
+              ".dice img:nth-child(" + (i + 1) + ")",
+              { y: -50, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.2 },
+            );
+            break;
+          }
+        }
+
+        diceKeep.splice(activeDieKeep, 1);
+        diceKeep[4] = null;
+
+        if (getDiceKeepCount() === 0) {
+          activeDieKeep = 0;
+          activeDie = 0;
+          mode = MODE_DICE;
+          lastDiceMode = MODE_DICE;
+        } else {
+          activeDieKeep = Math.min(activeDieKeep, getDiceKeepCount() - 1);
+        }
+      }
+
+      function chooseScore() {
+        finishRound(rollsLeft > 0);
+
+        const row = TABLE_ROWS_SELECTABLE[selectedTableRow];
+        scores[row] = scoreCalculators[row](dice);
+
+        gsap.fromTo(
+          "#" + TABLE_ROWS_SELECTABLE[selectedTableRow],
+          { y: -10, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.2 },
+        );
+      }
+
+      function refreshAll() {
         refreshTable();
-        refreshDicesKeep();
-        refreshDices();
+        refreshDiceKeep();
+        refreshDice();
         refreshUI();
       }
+
+      function refreshTable() {
+        for (let i = 0; i < TABLE_ROWS_SELECTABLE.length; i++) {
+          document.getElementById(
+            TABLE_ROWS_SELECTABLE[i],
+          ).style.backgroundColor =
+            mode === MODE_CHOOSE_SCORE && i === selectedTableRow
+              ? "#45475a"
+              : "";
+        }
+
+        for (let i = 0; i < TABLE_ROWS_SELECTABLE.length; i++) {
+          const elem = document.getElementById(TABLE_ROWS_SELECTABLE[i])
+            .children[1];
+          elem.innerHTML =
+            scores[TABLE_ROWS_SELECTABLE[i]] !== null
+              ? scores[TABLE_ROWS_SELECTABLE[i]]
+              : showSuggestion(TABLE_ROWS_SELECTABLE[i]);
+        }
+
+        document.getElementById(SCORE_SUM).children[1].innerHTML =
+          calculateSum() + "/63";
+        const bonus = calculateBonus();
+        document.getElementById(SCORE_BONUS).children[1].innerHTML =
+          bonus === null ? "" : bonus;
+        document.getElementById(SCORE_TOTAL).children[1].innerHTML =
+          calculateTotal();
+      }
+
+      function showSuggestion(row) {
+        const combined = [
+          ...dice.filter((a) => a !== null),
+          ...diceKeep.filter((a) => a !== null),
+        ];
+
+        const score = scoreCalculators[row](combined);
+        return '<span class="suggestion">' + score + "</span>";
+      }
+
+      function refreshDiceKeep() {
+        for (let i = 0; i < 5; i++) {
+          const diceElem = document.getElementById("diceKeep" + i);
+
+          if (mode === MODE_DICE_KEEP && i == activeDieKeep) {
+            diceElem.style.backgroundColor = "#45475a";
+            diceElem.style.borderRadius = "16px";
+          } else {
+            diceElem.style.backgroundColor = "transparent";
+          }
+
+          diceElem.src =
+            diceKeep[i] === null
+              ? "none.svg"
+              : "inverted-dice-" + diceKeep[i] + ".svg";
+        }
+      }
+
+      function refreshDice() {
+        for (let i = 0; i < 5; i++) {
+          const diceElem = document.getElementById("dice" + i);
+
+          if (mode === MODE_DICE && i == activeDie) {
+            diceElem.style.backgroundColor = "#45475a";
+            diceElem.style.borderRadius = "24px";
+          } else {
+            diceElem.style.backgroundColor = "transparent";
+          }
+
+          diceElem.src =
+            dice[i] === null ? "none.svg" : "inverted-dice-" + dice[i] + ".svg";
+        }
+      }
+
 
       function refreshUI() {
         const btn = document.getElementById("rollDice");
@@ -538,7 +496,6 @@
           SCORE_FIVES,
           SCORE_SIXES,
         ];
-
         return topSection.reduce((sum, key) => sum + (scores[key] || 0), 0);
       }
 
@@ -551,13 +508,9 @@
           SCORE_FIVES,
           SCORE_SIXES,
         ];
-
         const sum = calculateSum();
-
         if (sum >= 63) return 35;
-
         const allFilled = topSection.every((key) => scores[key] !== null);
-
         return allFilled ? 0 : null;
       }
 
@@ -569,87 +522,121 @@
         return sumAll + (calculateBonus() || 0);
       }
 
-      function showSuggestion(row) {
-        const combined = [
-          ...dices.filter((a) => a !== null),
-          ...dicesKeep.filter((a) => a !== null),
-        ];
-
-        const score = scoreCalculators[row](combined);
-        return '<span class="suggestion">' + score + "</span>";
+      function getNumbersScore(dice, targetNumber) {
+        return dice
+          .filter((d) => d === targetNumber)
+          .reduce((s, d) => s + d, 0);
       }
 
-      function refreshTable() {
+      function getFullHouseScore(dice) {
+        return isFullHouse(dice) ? dice.reduce((a, b) => a + b, 0) : 0;
+      }
+
+      function getFourOfAKindScore(dice) {
+        return isFourOfAKind(dice) ? dice.reduce((a, b) => a + b, 0) : 0;
+      }
+
+      function getSmallStraightScore(dice) {
+        return isSmallStraight(dice) ? 15 : 0;
+      }
+
+      function getBigStraightScore(dice) {
+        return isBigStraight(dice) ? 30 : 0;
+      }
+
+      function getChoiceScore(dice) {
+        return dice.reduce((sum, d) => sum + d, 0);
+      }
+
+      function getYahtzeeScore(dice) {
+        return isYahtzee(dice) ? 50 : 0;
+      }
+
+      function isFullHouse(dice) {
+        const counts = {};
+        for (const die of dice) {
+          counts[die] = (counts[die] || 0) + 1;
+        }
+        const values = Object.values(counts);
+        return values.includes(3) && values.includes(2);
+      }
+
+      function isFourOfAKind(dice) {
+        const counts = {};
+        for (const die of dice) {
+          counts[die] = (counts[die] || 0) + 1;
+        }
+        return Object.values(counts).some((count) => count >= 4);
+      }
+
+      function isSmallStraight(dice) {
+        const sorted = [...new Set(dice)].sort((a, b) => a - b);
+        const str = sorted.join("");
+        return (
+          str.includes("1234") || str.includes("2345") || str.includes("3456")
+        );
+      }
+
+      function isBigStraight(dice) {
+        const sorted = [...new Set(dice)].sort((a, b) => a - b);
+        const str = sorted.join("");
+        return str === "12345" || str === "23456";
+      }
+
+      function isYahtzee(dice) {
+        return new Set(dice).size === 1;
+      }
+
+      function randomIntFromInterval(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      function getDiceKeepCount() {
+        return diceKeep.filter((d) => d !== null).length;
+      }
+
+      function getDiceCount() {
+        return dice.filter((d) => d !== null).length;
+      }
+
+      function getPreviousSelectedTableRow() {
+        return (
+          (selectedTableRow - 1 + TABLE_ROWS_SELECTABLE.length) %
+          TABLE_ROWS_SELECTABLE.length
+        );
+      }
+
+      function getNextSelectedTableRow() {
+        return (selectedTableRow + 1) % TABLE_ROWS_SELECTABLE.length;
+      }
+
+      function setSelectedTableRowOnModeChange() {
+        selectedTableRow = 0;
+        while (scores[TABLE_ROWS_SELECTABLE[selectedTableRow]] !== null) {
+          selectedTableRow = getNextSelectedTableRow();
+        }
+      }
+
+      function isEndOfGame() {
         for (let i = 0; i < TABLE_ROWS_SELECTABLE.length; i++) {
-          document.getElementById(
-            TABLE_ROWS_SELECTABLE[i],
-          ).style.backgroundColor =
-            mode === MODE_CHOOSE_SCORE && i === selectedTableRow
-              ? "#45475a"
-              : "";
+          if (scores[TABLE_ROWS_SELECTABLE[i]] === null) return false;
         }
-
-        for (let i = 0; i < TABLE_ROWS_SELECTABLE.length; i++) {
-          const elem = document.getElementById(TABLE_ROWS_SELECTABLE[i])
-            .children[1];
-          elem.innerHTML =
-            scores[TABLE_ROWS_SELECTABLE[i]] !== null
-              ? scores[TABLE_ROWS_SELECTABLE[i]]
-              : showSuggestion(TABLE_ROWS_SELECTABLE[i]);
-        }
-
-        document.getElementById(SCORE_SUM).children[1].innerHTML =
-          calculateSum() + "/63";
-        const bonus = calculateBonus();
-        document.getElementById(SCORE_BONUS).children[1].innerHTML =
-          bonus === null ? "" : bonus;
-        document.getElementById(SCORE_TOTAL).children[1].innerHTML =
-          calculateTotal();
+        return true;
       }
 
-      function refreshDicesKeep() {
-        for (let i = 0; i < 5; i++) {
-          const diceElem = document.getElementById("diceKeep" + i);
+      function toggleInfo(event) {
+        event.stopPropagation();
+        const panel = document.getElementById("infoPanel");
+        panel.classList.toggle("show");
+      }
 
-          if (mode === MODE_DICES_KEEP && i == activeDiceKeep) {
-            diceElem.style.backgroundColor = "#45475a";
-            diceElem.style.borderRadius = "16px";
-          } else {
-            diceElem.style.backgroundColor = "transparent";
-          }
-
-          diceElem.src =
-            dicesKeep[i] === null
-              ? "none.svg"
-              : "inverted-dice-" + dicesKeep[i] + ".svg";
+      document.addEventListener("click", function(event) {
+        const panel = document.getElementById("infoPanel");
+        const container = document.getElementById("infoContainer");
+        if (panel.classList.contains("show") && !container.contains(event.target)) {
+          panel.classList.remove("show");
         }
-      }
-
-      function refreshDices() {
-        for (let i = 0; i < 5; i++) {
-          const diceElem = document.getElementById("dice" + i);
-
-          if (mode === MODE_DICES && i == activeDice) {
-            diceElem.style.backgroundColor = "#45475a";
-            diceElem.style.borderRadius = "24px";
-          } else {
-            diceElem.style.backgroundColor = "transparent";
-          }
-
-          diceElem.src =
-            dices[i] === null
-              ? "none.svg"
-              : "inverted-dice-" + dices[i] + ".svg";
-        }
-      }
-
-      function handleLoad() {
-        initializeGame();
-        refreshTable();
-        refreshDices();
-        refreshDicesKeep();
-        refreshUI();
-      }
+      });
     </script>
     <style>
       * {
@@ -794,6 +781,84 @@
       .end-of-game {
         font-size: 96px;
       }
+
+.info-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 100;
+      }
+
+      .info-button {
+        width: 32px;
+        height: 32px;
+        color: #6c7086;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .info-button:hover {
+        color: #cdd6f4;
+      }
+
+      .info-panel {
+        position: absolute;
+        bottom: 40px;
+        right: 0;
+        background-color: #181825;
+        padding: 16px 20px;
+        border-radius: 12px;
+        width: max-content;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(5px);
+        transition: opacity 0.2s, transform 0.2s;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        color: #a6adc8;
+        font-size: 13px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .info-panel.show {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+
+      .info-panel p {
+        margin: 0;
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .info-panel strong {
+        color: #cdd6f4;
+        font-weight: 600;
+      }
+
+      .info-panel a {
+        color: #89b4fa;
+        text-decoration: none;
+        margin-top: 4px;
+        transition: color 0.2s;
+      }
+
+      .info-panel a:hover {
+        color: #b4befe;
+      }
+
+      @media (max-width: 768px) {
+        .info-container {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body onkeydown="handleKeyDown(event)" onload="handleLoad()">
@@ -865,10 +930,10 @@
             </tr>
             <tr
               class="selectable"
-              id="scoreFullHouse"
-              onclick="handleRowClick('scoreFullHouse')"
+              id="scoreChoice"
+              onclick="handleRowClick('scoreChoice')"
             >
-              <td>Full House</td>
+              <td>Choice</td>
               <td></td>
             </tr>
             <tr
@@ -877,6 +942,14 @@
               onclick="handleRowClick('scoreFourOfAKind')"
             >
               <td>4 of a Kind</td>
+              <td></td>
+            </tr>
+            <tr
+              class="selectable"
+              id="scoreFullHouse"
+              onclick="handleRowClick('scoreFullHouse')"
+            >
+              <td>Full House</td>
               <td></td>
             </tr>
             <tr
@@ -893,14 +966,6 @@
               onclick="handleRowClick('scoreBigStraight')"
             >
               <td>Big Straight</td>
-              <td></td>
-            </tr>
-            <tr
-              class="selectable"
-              id="scoreChoice"
-              onclick="handleRowClick('scoreChoice')"
-            >
-              <td>Choice</td>
               <td></td>
             </tr>
             <tr
@@ -927,31 +992,31 @@
             id="diceKeep0"
             src="none.svg"
             width="64"
-            onclick="handleDiceKeepClick(0)"
+            onclick="handleDieKeepClick(0)"
           />
           <img
             id="diceKeep1"
             src="none.svg"
             width="64"
-            onclick="handleDiceKeepClick(1)"
+            onclick="handleDieKeepClick(1)"
           />
           <img
             id="diceKeep2"
             src="none.svg"
             width="64"
-            onclick="handleDiceKeepClick(2)"
+            onclick="handleDieKeepClick(2)"
           />
           <img
             id="diceKeep3"
             src="none.svg"
             width="64"
-            onclick="handleDiceKeepClick(3)"
+            onclick="handleDieKeepClick(3)"
           />
           <img
             id="diceKeep4"
             src="none.svg"
             width="64"
-            onclick="handleDiceKeepClick(4)"
+            onclick="handleDieKeepClick(4)"
           />
         </div>
         <div class="dice" id="dice">
@@ -959,31 +1024,31 @@
             id="dice0"
             src="none.svg"
             width="96"
-            onclick="handleDiceClick(0)"
+            onclick="handleDieClick(0)"
           />
           <img
             id="dice1"
             src="none.svg"
             width="96"
-            onclick="handleDiceClick(1)"
+            onclick="handleDieClick(1)"
           />
           <img
             id="dice2"
             src="none.svg"
             width="96"
-            onclick="handleDiceClick(2)"
+            onclick="handleDieClick(2)"
           />
           <img
             id="dice3"
             src="none.svg"
             width="96"
-            onclick="handleDiceClick(3)"
+            onclick="handleDieClick(3)"
           />
           <img
             id="dice4"
             src="none.svg"
             width="96"
-            onclick="handleDiceClick(4)"
+            onclick="handleDieClick(4)"
           />
         </div>
         <div>
@@ -991,6 +1056,16 @@
             Roll dice (2)
           </button>
         </div>
+      </div>
+    </div>
+    <div class="info-container" id="infoContainer">
+      <div class="info-button" onclick="toggleInfo(event)">?</div>
+      
+      <div class="info-panel" id="infoPanel">
+        <p><strong>Arrows</strong> Navigate</p>
+        <p><strong>Space</strong> Keep / Release</p>
+        <p><strong>Enter</strong> Roll / Confirm</p>
+        <a href="https://ko-fi.com/alexanderteinum" target="_blank">☕ Buy me a coffee</a>
       </div>
     </div>
   </body>
