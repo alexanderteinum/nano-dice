@@ -3,9 +3,12 @@
   <head>
     <title>key-yacht</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..800;1,300..800&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
     <script>
       const MODE_DICE = 0;
@@ -125,7 +128,7 @@
         rollsLeft = 2;
 
         gsap.fromTo(
-          ".dice img",
+          ".dice svg",
           { y: -100, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.2, stagger: 0.05 },
         );
@@ -141,7 +144,7 @@
           dice[i] = randomIntFromInterval(1, 6);
           if (rollsLeft > 1) {
             gsap.fromTo(
-              ".dice img:nth-child(" + (i + 1) + ")",
+              ".dice svg:nth-child(" + (i + 1) + ")",
               { y: -200, opacity: 0 },
               { y: 0, opacity: 1, duration: 0.2, delay: rolled * 0.05 },
             );
@@ -169,7 +172,7 @@
 
         if (animate) {
           gsap.fromTo(
-            ".dice img",
+            ".dice svg",
             { opacity: 0 },
             { opacity: 1, duration: 1, stagger: 0.1 },
           );
@@ -322,7 +325,7 @@
           if (diceKeep[i] === null) {
             diceKeep[i] = dice[activeDie];
             gsap.fromTo(
-              ".dice-keep img:nth-child(" + (i + 1) + ")",
+              ".dice-keep svg:nth-child(" + (i + 1) + ")",
               { y: 50, opacity: 0 },
               { y: 0, opacity: 1, duration: 0.2 },
             );
@@ -346,7 +349,7 @@
           if (dice[i] === null) {
             dice[i] = diceKeep[activeDieKeep];
             gsap.fromTo(
-              ".dice img:nth-child(" + (i + 1) + ")",
+              ".dice svg:nth-child(" + (i + 1) + ")",
               { y: -50, opacity: 0 },
               { y: 0, opacity: 1, duration: 0.2 },
             );
@@ -436,10 +439,11 @@
             diceElem.style.backgroundColor = "transparent";
           }
 
-          diceElem.src =
-            diceKeep[i] === null
-              ? "none.svg"
-              : "inverted-dice-" + diceKeep[i] + ".svg";
+          const useElem = diceElem.querySelector("use");
+          useElem.setAttribute(
+            "href",
+            diceKeep[i] === null ? "#dice-none" : "#dice-" + diceKeep[i],
+          );
         }
       }
 
@@ -454,8 +458,11 @@
             diceElem.style.backgroundColor = "transparent";
           }
 
-          diceElem.src =
-            dice[i] === null ? "none.svg" : "inverted-dice-" + dice[i] + ".svg";
+          const useElem = diceElem.querySelector("use");
+          useElem.setAttribute(
+            "href",
+            dice[i] === null ? "#dice-none" : "#dice-" + dice[i],
+          );
         }
       }
 
@@ -626,10 +633,13 @@
         panel.classList.toggle("show");
       }
 
-      document.addEventListener("click", function(event) {
+      document.addEventListener("click", function (event) {
         const panel = document.getElementById("infoPanel");
         const container = document.getElementById("infoContainer");
-        if (panel.classList.contains("show") && !container.contains(event.target)) {
+        if (
+          panel.classList.contains("show") &&
+          !container.contains(event.target)
+        ) {
           panel.classList.remove("show");
         }
       });
@@ -701,12 +711,12 @@
           font-size: 48px !important;
         }
 
-        .dice img {
+        .dice svg {
           width: 14vw;
           max-width: 50px;
         }
 
-        .dice-keep img {
+        .dice-keep svg {
           width: 10vw;
           max-width: 38px;
         }
@@ -726,8 +736,8 @@
         color: #6e738d;
       }
 
-      .dice-keep img,
-      .dice img,
+      .dice-keep svg,
+      .dice svg,
       tbody tr.selectable {
         cursor: pointer;
       }
@@ -813,7 +823,9 @@
         opacity: 0;
         pointer-events: none;
         transform: translateY(5px);
-        transition: opacity 0.2s, transform 0.2s;
+        transition:
+          opacity 0.2s,
+          transform 0.2s;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         color: #a5adcb;
         font-size: 13px;
@@ -859,6 +871,108 @@
     </style>
   </head>
   <body onkeydown="handleKeyDown(event)" onload="handleLoad()">
+    <svg style="display: none">
+      <symbol id="dice-none" viewBox="0 0 512 512"></symbol>
+
+      <symbol id="dice-1" viewBox="0 0 512 512">
+        <rect
+          x="48"
+          y="48"
+          width="416"
+          height="416"
+          rx="96"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="8"
+        />
+        <circle cx="256" cy="256" r="32" fill="currentColor" />
+      </symbol>
+
+      <symbol id="dice-2" viewBox="0 0 512 512">
+        <rect
+          x="48"
+          y="48"
+          width="416"
+          height="416"
+          rx="96"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="8"
+        />
+        <circle cx="368" cy="144" r="32" fill="currentColor" />
+        <circle cx="144" cy="368" r="32" fill="currentColor" />
+      </symbol>
+
+      <symbol id="dice-3" viewBox="0 0 512 512">
+        <rect
+          x="48"
+          y="48"
+          width="416"
+          height="416"
+          rx="96"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="8"
+        />
+        <circle cx="368" cy="144" r="32" fill="currentColor" />
+        <circle cx="256" cy="256" r="32" fill="currentColor" />
+        <circle cx="144" cy="368" r="32" fill="currentColor" />
+      </symbol>
+
+      <symbol id="dice-4" viewBox="0 0 512 512">
+        <rect
+          x="48"
+          y="48"
+          width="416"
+          height="416"
+          rx="96"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="8"
+        />
+        <circle cx="144" cy="144" r="32" fill="currentColor" />
+        <circle cx="368" cy="144" r="32" fill="currentColor" />
+        <circle cx="144" cy="368" r="32" fill="currentColor" />
+        <circle cx="368" cy="368" r="32" fill="currentColor" />
+      </symbol>
+
+      <symbol id="dice-5" viewBox="0 0 512 512">
+        <rect
+          x="48"
+          y="48"
+          width="416"
+          height="416"
+          rx="96"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="8"
+        />
+        <circle cx="144" cy="144" r="32" fill="currentColor" />
+        <circle cx="368" cy="144" r="32" fill="currentColor" />
+        <circle cx="256" cy="256" r="32" fill="currentColor" />
+        <circle cx="144" cy="368" r="32" fill="currentColor" />
+        <circle cx="368" cy="368" r="32" fill="currentColor" />
+      </symbol>
+
+      <symbol id="dice-6" viewBox="0 0 512 512">
+        <rect
+          x="48"
+          y="48"
+          width="416"
+          height="416"
+          rx="96"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="8"
+        />
+        <circle cx="144" cy="144" r="32" fill="currentColor" />
+        <circle cx="144" cy="256" r="32" fill="currentColor" />
+        <circle cx="144" cy="368" r="32" fill="currentColor" />
+        <circle cx="368" cy="144" r="32" fill="currentColor" />
+        <circle cx="368" cy="256" r="32" fill="currentColor" />
+        <circle cx="368" cy="368" r="32" fill="currentColor" />
+      </symbol>
+    </svg>
     <div class="main-container">
       <div class="table-container">
         <table>
@@ -985,68 +1099,88 @@
           Well done!
         </div>
         <div class="dice-keep" id="diceKeep">
-          <img
+          <svg
             id="diceKeep0"
-            src="none.svg"
+            viewBox="0 0 512 512"
             width="64"
             onclick="handleDieKeepClick(0)"
-          />
-          <img
+          >
+            <use href="#dice-none"></use>
+          </svg>
+          <svg
             id="diceKeep1"
-            src="none.svg"
+            viewBox="0 0 512 512"
             width="64"
             onclick="handleDieKeepClick(1)"
-          />
-          <img
+          >
+            <use href="#dice-none"></use>
+          </svg>
+          <svg
             id="diceKeep2"
-            src="none.svg"
+            viewBox="0 0 512 512"
             width="64"
             onclick="handleDieKeepClick(2)"
-          />
-          <img
+          >
+            <use href="#dice-none"></use>
+          </svg>
+          <svg
             id="diceKeep3"
-            src="none.svg"
+            viewBox="0 0 512 512"
             width="64"
             onclick="handleDieKeepClick(3)"
-          />
-          <img
+          >
+            <use href="#dice-none"></use>
+          </svg>
+          <svg
             id="diceKeep4"
-            src="none.svg"
+            viewBox="0 0 512 512"
             width="64"
             onclick="handleDieKeepClick(4)"
-          />
+          >
+            <use href="#dice-none"></use>
+          </svg>
         </div>
         <div class="dice" id="dice">
-          <img
+          <svg
             id="dice0"
-            src="none.svg"
+            viewBox="0 0 512 512"
             width="96"
             onclick="handleDieClick(0)"
-          />
-          <img
+          >
+            <use href="#dice-none"></use>
+          </svg>
+          <svg
             id="dice1"
-            src="none.svg"
+            viewBox="0 0 512 512"
             width="96"
             onclick="handleDieClick(1)"
-          />
-          <img
+          >
+            <use href="#dice-none"></use>
+          </svg>
+          <svg
             id="dice2"
-            src="none.svg"
+            viewBox="0 0 512 512"
             width="96"
             onclick="handleDieClick(2)"
-          />
-          <img
+          >
+            <use href="#dice-none"></use>
+          </svg>
+          <svg
             id="dice3"
-            src="none.svg"
+            viewBox="0 0 512 512"
             width="96"
             onclick="handleDieClick(3)"
-          />
-          <img
+          >
+            <use href="#dice-none"></use>
+          </svg>
+          <svg
             id="dice4"
-            src="none.svg"
+            viewBox="0 0 512 512"
             width="96"
             onclick="handleDieClick(4)"
-          />
+          >
+            <use href="#dice-none"></use>
+          </svg>
         </div>
         <div>
           <button class="roll-dice" id="rollDice" onclick="handleRollClick()">
@@ -1057,12 +1191,14 @@
     </div>
     <div class="info-container" id="infoContainer">
       <div class="info-button" onclick="toggleInfo(event)">?</div>
-      
+
       <div class="info-panel" id="infoPanel">
         <p><strong>Arrows</strong> Navigate</p>
         <p><strong>Space</strong> Keep / Release</p>
         <p><strong>Enter</strong> Roll / Confirm</p>
-        <a href="https://ko-fi.com/alexanderteinum" target="_blank">☕ Buy me a coffee</a>
+        <a href="https://ko-fi.com/alexanderteinum" target="_blank"
+          >☕ Buy me a coffee</a
+        >
       </div>
     </div>
   </body>
