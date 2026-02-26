@@ -765,6 +765,7 @@
 
       * {
         box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
       }
 
       body {
@@ -777,6 +778,13 @@
         transition:
           background-color 0.3s,
           color 0.3s;
+        user-select: none;
+      }
+
+      button,
+      svg,
+      tr.selectable {
+        touch-action: manipulation;
       }
 
       body,
