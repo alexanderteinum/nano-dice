@@ -393,7 +393,7 @@
             TABLE_ROWS_SELECTABLE[i],
           ).style.backgroundColor =
             mode === MODE_CHOOSE_SCORE && i === selectedTableRow
-              ? "#45475a"
+              ? "#494d64"
               : "";
         }
 
@@ -430,7 +430,7 @@
           const diceElem = document.getElementById("diceKeep" + i);
 
           if (mode === MODE_DICE_KEEP && i == activeDieKeep) {
-            diceElem.style.backgroundColor = "#45475a";
+            diceElem.style.backgroundColor = "#494d64";
             diceElem.style.borderRadius = "16px";
           } else {
             diceElem.style.backgroundColor = "transparent";
@@ -448,7 +448,7 @@
           const diceElem = document.getElementById("dice" + i);
 
           if (mode === MODE_DICE && i == activeDie) {
-            diceElem.style.backgroundColor = "#45475a";
+            diceElem.style.backgroundColor = "#494d64";
             diceElem.style.borderRadius = "24px";
           } else {
             diceElem.style.backgroundColor = "transparent";
@@ -458,7 +458,6 @@
             dice[i] === null ? "none.svg" : "inverted-dice-" + dice[i] + ".svg";
         }
       }
-
 
       function refreshUI() {
         const btn = document.getElementById("rollDice");
@@ -641,8 +640,8 @@
       }
 
       body {
-        background-color: #1e1e2e;
-        color: #cdd6f4;
+        background-color: #24273a;
+        color: #cad3f5;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -718,13 +717,13 @@
         border: 0;
         border-radius: 8px;
         padding: 16px;
-        background-color: #313244;
-        color: #cdd6f4;
+        background-color: #363a4f;
+        color: #cad3f5;
         cursor: pointer;
       }
 
       button.roll-dice:disabled {
-        color: #6c7086;
+        color: #6e738d;
       }
 
       .dice-keep img,
@@ -744,7 +743,7 @@
 
       th,
       td {
-        border: 1px solid #45475a;
+        border: 1px solid #494d64;
         padding: 4px;
         font-size: 14px;
         width: 50%;
@@ -773,14 +772,14 @@
       }
 
       .suggestion {
-        color: #6c7086;
+        color: #6e738d;
       }
 
       .end-of-game {
         font-size: 96px;
       }
 
-.info-container {
+      .info-container {
         position: fixed;
         bottom: 24px;
         right: 24px;
@@ -790,7 +789,7 @@
       .info-button {
         width: 32px;
         height: 32px;
-        color: #6c7086;
+        color: #6e738d;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -800,14 +799,14 @@
       }
 
       .info-button:hover {
-        color: #cdd6f4;
+        color: #cad3f5;
       }
 
       .info-panel {
         position: absolute;
         bottom: 40px;
         right: 0;
-        background-color: #181825;
+        background-color: #1e2030;
         padding: 16px 20px;
         border-radius: 12px;
         width: max-content;
@@ -816,7 +815,7 @@
         transform: translateY(5px);
         transition: opacity 0.2s, transform 0.2s;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        color: #a6adc8;
+        color: #a5adcb;
         font-size: 13px;
         display: flex;
         flex-direction: column;
@@ -837,19 +836,19 @@
       }
 
       .info-panel strong {
-        color: #cdd6f4;
+        color: #cad3f5;
         font-weight: 600;
       }
 
       .info-panel a {
-        color: #89b4fa;
+        color: #8aadf4;
         text-decoration: none;
         margin-top: 4px;
         transition: color 0.2s;
       }
 
       .info-panel a:hover {
-        color: #b4befe;
+        color: #b7bdf8;
       }
 
       @media (max-width: 768px) {
@@ -865,8 +864,8 @@
         <table>
           <thead>
             <tr>
-              <th style="border-bottom: 1px solid #7f849c">Roll</th>
-              <th style="border-bottom: 1px solid #7f849c">Score</th>
+              <th style="border-bottom: 1px solid #8087a2">Roll</th>
+              <th style="border-bottom: 1px solid #8087a2">Score</th>
             </tr>
           </thead>
           <tbody>
@@ -915,16 +914,16 @@
               id="scoreSixes"
               onclick="handleRowClick('scoreSixes')"
             >
-              <td style="border-bottom: 1px solid #7f849c">Sixes</td>
-              <td style="border-bottom: 1px solid #7f849c"></td>
+              <td style="border-bottom: 1px solid #8087a2">Sixes</td>
+              <td style="border-bottom: 1px solid #8087a2"></td>
             </tr>
             <tr id="scoreSum">
               <td>Sum</td>
               <td class="sum"></td>
             </tr>
             <tr id="scoreBonus">
-              <td style="border-bottom: 1px solid #7f849c">Bonus</td>
-              <td style="border-bottom: 1px solid #7f849c"></td>
+              <td style="border-bottom: 1px solid #8087a2">Bonus</td>
+              <td style="border-bottom: 1px solid #8087a2"></td>
             </tr>
             <tr
               class="selectable"
@@ -971,8 +970,8 @@
               id="scoreYacht"
               onclick="handleRowClick('scoreYacht')"
             >
-              <td style="border-bottom: 1px solid #7f849c">Yacht</td>
-              <td style="border-bottom: 1px solid #7f849c"></td>
+              <td style="border-bottom: 1px solid #8087a2">Yacht</td>
+              <td style="border-bottom: 1px solid #8087a2"></td>
             </tr>
             <tr id="scoreTotal">
               <td>Total</td>
