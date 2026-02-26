@@ -33,6 +33,7 @@
       const SCORE_SIXES = "scoreSixes";
       const SCORE_SUM = "scoreSum";
       const SCORE_BONUS = "scoreBonus";
+      const SCORE_SUM_BONUS = "scoreSumBonus";
       const SCORE_CHOICE = "scoreChoice";
       const SCORE_FOUR_OF_A_KIND = "scoreFourOfAKind";
       const SCORE_FULL_HOUSE = "scoreFullHouse";
@@ -50,6 +51,7 @@
         SCORE_SIXES,
         SCORE_SUM,
         SCORE_BONUS,
+        SCORE_SUM_BONUS,
         SCORE_CHOICE,
         SCORE_FOUR_OF_A_KIND,
         SCORE_FULL_HOUSE,
@@ -459,11 +461,17 @@
               : showSuggestion(TABLE_ROWS_SELECTABLE[i]);
         }
 
-        document.getElementById(SCORE_SUM).children[1].innerHTML =
-          calculateSum() + "/63";
+        const sum = calculateSum();
         const bonus = calculateBonus();
+        let sumBonus = sum + "/63";
+        sumBonus += bonus === null ? "" : ", +" + bonus;
+
+        document.getElementById(SCORE_SUM).children[1].innerHTML =
+          sum + "/63";
         document.getElementById(SCORE_BONUS).children[1].innerHTML =
-          bonus === null ? "" : bonus;
+          bonus === null ? "" : "+" + bonus;
+        document.getElementById(SCORE_SUM_BONUS).children[1].innerHTML =
+          sumBonus;
         document.getElementById(SCORE_TOTAL).children[1].innerHTML =
           calculateTotal();
 
@@ -795,6 +803,7 @@
         background-color: var(--base);
         color: var(--text);
         display: flex;
+        align-items: center;
         justify-content: center;
         min-height: 100vh;
         margin: 0;
@@ -829,11 +838,6 @@
       }
 
       @media (max-width: 768px) {
-        body {
-          margin-top: 8px;
-          align-items: left;
-        }
-
         .main-container {
           flex-direction: column;
           align-items: center;
@@ -860,13 +864,13 @@
         .dice svg {
           width: 64px;
         }
+
+        .score-sum, .score-bonus {
+          display: none;
+        }
       }
 
       @media (min-width: 769px) {
-        body {
-          align-items: center;
-        }
-
         .main-container {
           max-width: 896px;
         }
@@ -920,6 +924,10 @@
         .dice svg:not(.none, .disabled),
         button.roll-dice:not(:disabled) {
           cursor: pointer;
+        }
+
+        .score-sum-bonus {
+          display: none;
         }
       }
 
@@ -1243,13 +1251,17 @@
               <td style="border-bottom: 1px solid var(--overlay1)">Sixes</td>
               <td style="border-bottom: 1px solid var(--overlay1)"></td>
             </tr>
-            <tr id="scoreSum">
+            <tr class="score-sum" id="scoreSum">
               <td>Sum</td>
               <td class="sum"></td>
             </tr>
-            <tr id="scoreBonus">
+            <tr class="score-bonus" id="scoreBonus">
               <td style="border-bottom: 1px solid var(--overlay1)">Bonus</td>
               <td style="border-bottom: 1px solid var(--overlay1)"></td>
+            </tr>
+            <tr class="score-sum-bonus" id="scoreSumBonus">
+              <td style="border-top: 1px solid var(--overlay1); border-bottom: 1px solid var(--overlay1)">Sum/Bonus</td>
+              <td class="sum" style="border-top: 1px solid var(--overlay1); border-bottom: 1px solid var(--overlay1)"></td>
             </tr>
             <tr
               class="selectable"
