@@ -37,7 +37,7 @@
       const SCORE_FOUR_OF_A_KIND = "scoreFourOfAKind";
       const SCORE_FULL_HOUSE = "scoreFullHouse";
       const SCORE_SMALL_STRAIGHT = "scoreSmallStraight";
-      const SCORE_BIG_STRAIGHT = "scoreBigStraight";
+      const SCORE_LARGE_STRAIGHT = "scoreLargeStraight";
       const SCORE_YACHT = "scoreYacht";
       const SCORE_TOTAL = "scoreTotal";
 
@@ -54,7 +54,7 @@
         SCORE_FOUR_OF_A_KIND,
         SCORE_FULL_HOUSE,
         SCORE_SMALL_STRAIGHT,
-        SCORE_BIG_STRAIGHT,
+        SCORE_LARGE_STRAIGHT,
         SCORE_YACHT,
         SCORE_TOTAL,
       ];
@@ -70,7 +70,7 @@
         SCORE_FOUR_OF_A_KIND,
         SCORE_FULL_HOUSE,
         SCORE_SMALL_STRAIGHT,
-        SCORE_BIG_STRAIGHT,
+        SCORE_LARGE_STRAIGHT,
         SCORE_YACHT,
       ];
 
@@ -85,7 +85,7 @@
         [SCORE_FOUR_OF_A_KIND]: getFourOfAKindScore,
         [SCORE_FULL_HOUSE]: getFullHouseScore,
         [SCORE_SMALL_STRAIGHT]: getSmallStraightScore,
-        [SCORE_BIG_STRAIGHT]: getBigStraightScore,
+        [SCORE_LARGE_STRAIGHT]: getLargeStraightScore,
         [SCORE_YACHT]: getYahtzeeScore,
       };
 
@@ -603,8 +603,8 @@
         return isSmallStraight(dice) ? 15 : 0;
       }
 
-      function getBigStraightScore(dice) {
-        return isBigStraight(dice) ? 30 : 0;
+      function getLargeStraightScore(dice) {
+        return isLargeStraight(dice) ? 30 : 0;
       }
 
       function getChoiceScore(dice) {
@@ -640,7 +640,7 @@
         );
       }
 
-      function isBigStraight(dice) {
+      function isLargeStraight(dice) {
         const sorted = [...new Set(dice)].sort((a, b) => a - b);
         const str = sorted.join("");
         return str === "12345" || str === "23456";
@@ -1256,10 +1256,10 @@
             </tr>
             <tr
               class="selectable"
-              id="scoreBigStraight"
-              onclick="handleRowClick('scoreBigStraight')"
+              id="scoreLargeStraight"
+              onclick="handleRowClick('scoreLargeStraight')"
             >
-              <td>Big Straight</td>
+              <td>Large Straight</td>
               <td></td>
             </tr>
             <tr
