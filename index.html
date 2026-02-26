@@ -413,12 +413,15 @@
 
       function refreshTable() {
         for (let i = 0; i < TABLE_ROWS_SELECTABLE.length; i++) {
-          document.getElementById(
+          const elem = document.getElementById(
             TABLE_ROWS_SELECTABLE[i],
-          ).style.backgroundColor =
-            mode === MODE_CHOOSE_SCORE && i === selectedTableRow
-              ? "var(--surface0)"
-              : "";
+          );
+
+          if (mode === MODE_CHOOSE_SCORE && i === selectedTableRow) {
+            elem.classList.add("selected");
+          } else {
+            elem.classList.remove("selected");
+          }
         }
 
         for (let i = 0; i < TABLE_ROWS_SELECTABLE.length; i++) {
@@ -473,10 +476,9 @@
           const diceElem = document.getElementById("dice" + i);
 
           if (mode === MODE_DICE && i == activeDie) {
-            diceElem.style.backgroundColor = "var(--surface1)";
-            diceElem.style.borderRadius = "24px";
+            diceElem.classList.add("active");
           } else {
-            diceElem.style.backgroundColor = "transparent";
+            diceElem.classList.remove("active");
           }
 
           const useElem = diceElem.querySelector("use");
@@ -732,7 +734,6 @@
         background-color: var(--base);
         color: var(--text);
         display: flex;
-        align-items: center;
         justify-content: center;
         min-height: 100vh;
         margin: 0;
@@ -749,7 +750,6 @@
 
       .main-container {
         display: flex;
-        max-width: 896px;
         flex-direction: row;
       }
 
@@ -758,30 +758,22 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 16px;
-        width: 640px;
       }
 
       @media (max-width: 768px) {
         body {
-          padding: 5px;
+          margin-top: 8px;
+          align-items: left;
         }
 
         .main-container {
           flex-direction: column;
           align-items: center;
-          gap: 12px;
-          padding: 10px;
+          gap: 8px;
         }
 
         .game-area {
           gap: 8px;
-        }
-
-        th,
-        td {
-          padding: 2px 4px;
-          font-size: 12px;
         }
 
         button.roll-dice {
@@ -801,6 +793,33 @@
         .dice-keep svg {
           width: 10vw;
           max-width: 38px;
+        }
+      }
+
+      @media (min-width: 769px) {
+        body {
+          align-items: center;
+        }
+
+        .main-container {
+          max-width: 896px;
+        }
+
+        .game-area {
+          width: 640px;
+        }
+
+        .game-area {
+          gap: 16px;
+        }
+
+        .active {
+          background-color: var(--surface1);
+          border-radius: 24px;
+        }
+
+        tr.selected {
+          background-color: var(--surface0);
         }
       }
 
