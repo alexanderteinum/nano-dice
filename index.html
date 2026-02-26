@@ -420,12 +420,20 @@
           } else {
             elem.classList.remove("selected");
           }
-        }
 
-        for (let i = 0; i < TABLE_ROWS_SELECTABLE.length; i++) {
-          const elem = document.getElementById(TABLE_ROWS_SELECTABLE[i])
-            .children[1];
-          elem.innerHTML =
+          if (mode === MODE_END_ROUND || mode === MODE_END_GAME) {
+            elem.classList.add("disabled");
+          } else {
+            elem.classList.remove("disabled");
+          }
+
+          if (scores[TABLE_ROWS_SELECTABLE[i]] !== null) {
+            elem.classList.add("has-score");
+          } else {
+            elem.classList.remove("has-score");
+          }
+
+          elem.children[1].innerHTML =
             scores[TABLE_ROWS_SELECTABLE[i]] !== null
               ? scores[TABLE_ROWS_SELECTABLE[i]]
               : showSuggestion(TABLE_ROWS_SELECTABLE[i]);
@@ -864,7 +872,7 @@
           background-color: var(--surface0);
         }
 
-        tr.selectable:hover {
+        tr:not(.disabled, .has-score).selectable:hover {
           background-color: var(--surface0);
         }
 
@@ -872,7 +880,11 @@
           background-color: var(--surface1);
         }
 
-        tbody tr.selectable,
+        tr {
+          cursor: default;
+        }
+
+        tr:not(.disabled, .has-score).selectable,
         .dice-keep svg:not(.none, .disabled),
         .dice svg:not(.none, .disabled),
         button.roll-dice:not(:disabled) {
