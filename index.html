@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>key-yacht</title>
+    <title>nano-dice</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -468,7 +468,7 @@
 
         document.getElementById(SCORE_SUM).children[1].innerHTML = sum + "/63";
         document.getElementById(SCORE_BONUS).children[1].innerHTML =
-          bonus === null ? "" : "+" + bonus;
+          bonus === null ? "" : bonus;
         document.getElementById(SCORE_SUM_BONUS).children[1].innerHTML =
           sumBonus;
         document.getElementById(SCORE_TOTAL).children[1].innerHTML =
@@ -838,6 +838,7 @@
       @media (max-width: 768px) {
         body {
           align-items: end;
+          padding-bottom: 8px;
         }
 
         .main-container {
