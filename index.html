@@ -413,9 +413,7 @@
 
       function refreshTable() {
         for (let i = 0; i < TABLE_ROWS_SELECTABLE.length; i++) {
-          const elem = document.getElementById(
-            TABLE_ROWS_SELECTABLE[i],
-          );
+          const elem = document.getElementById(TABLE_ROWS_SELECTABLE[i]);
 
           if (mode === MODE_CHOOSE_SCORE && i === selectedTableRow) {
             elem.classList.add("selected");
@@ -457,10 +455,25 @@
           const diceElem = document.getElementById("diceKeep" + i);
 
           if (mode === MODE_DICE_KEEP && i == activeDieKeep) {
-            diceElem.style.backgroundColor = "var(--surface1)";
-            diceElem.style.borderRadius = "16px";
+            diceElem.classList.add("active-keep");
           } else {
-            diceElem.style.backgroundColor = "transparent";
+            diceElem.classList.remove("active-keep");
+          }
+
+          if (
+            mode === MODE_CHOOSE_SCORE ||
+            mode === MODE_END_ROUND ||
+            mode === MODE_END_GAME
+          ) {
+            diceElem.classList.add("disabled");
+          } else {
+            diceElem.classList.remove("disabled");
+          }
+
+          if (diceKeep[i] === null) {
+            diceElem.classList.add("none");
+          } else {
+            diceElem.classList.remove("none");
           }
 
           const useElem = diceElem.querySelector("use");
@@ -479,6 +492,22 @@
             diceElem.classList.add("active");
           } else {
             diceElem.classList.remove("active");
+          }
+
+          if (
+            mode === MODE_CHOOSE_SCORE ||
+            mode === MODE_END_ROUND ||
+            mode === MODE_END_GAME
+          ) {
+            diceElem.classList.add("disabled");
+          } else {
+            diceElem.classList.remove("disabled");
+          }
+
+          if (dice[i] === null) {
+            diceElem.classList.add("none");
+          } else {
+            diceElem.classList.remove("none");
           }
 
           const useElem = diceElem.querySelector("use");
@@ -785,14 +814,12 @@
           font-size: 48px !important;
         }
 
-        .dice svg {
-          width: 14vw;
-          max-width: 50px;
+        .dice-keep svg {
+          width: 48px;
         }
 
-        .dice-keep svg {
-          width: 10vw;
-          max-width: 38px;
+        .dice svg {
+          width: 64px;
         }
       }
 
@@ -813,13 +840,43 @@
           gap: 16px;
         }
 
+        .dice-keep svg {
+          border-radius: 16px;
+        }
+
+        .dice svg {
+          border-radius: 24px;
+        }
+
+        .active-keep {
+          background-color: var(--surface1);
+        }
+
         .active {
           background-color: var(--surface1);
-          border-radius: 24px;
+        }
+
+        svg:not(.none, .disabled):hover {
+          background-color: var(--surface1);
         }
 
         tr.selected {
           background-color: var(--surface0);
+        }
+
+        tr.selectable:hover {
+          background-color: var(--surface0);
+        }
+
+        button:not(:disabled).roll-dice:hover {
+          background-color: var(--surface1);
+        }
+
+        tbody tr.selectable,
+        .dice-keep svg:not(.none, .disabled),
+        .dice svg:not(.none, .disabled),
+        button.roll-dice:not(:disabled) {
+          cursor: pointer;
         }
       }
 
@@ -830,7 +887,6 @@
         padding: 16px;
         background-color: var(--surface0);
         color: var(--text);
-        cursor: pointer;
         transition:
           background-color 0.3s,
           color 0.3s;
@@ -840,10 +896,9 @@
         color: var(--overlay0);
       }
 
-      .dice-keep svg,
-      .dice svg,
-      tbody tr.selectable {
-        cursor: pointer;
+      .dice-keep svg.disabled,
+      .dice svg.disabled {
+        pointer-events: none;
       }
 
       table {
