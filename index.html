@@ -165,21 +165,8 @@
         if (rollsLeft === 0) {
           mode = MODE_CHOOSE_SCORE;
           setSelectedTableRowOnModeChange();
-          finishRound(true);
-        }
-      }
-
-      function finishRound(animate) {
-        for (let i = 0; i < 5; i++) {
-          if (diceKeep[i] === null) continue;
-
-          dice[getDiceCount()] = diceKeep[i];
-          diceKeep[i] = null;
-        }
-
-        if (animate) {
           gsap.fromTo(
-            ".dice svg",
+            "svg:not(.none)",
             { opacity: 0 },
             { opacity: 1, duration: 1, stagger: 0.1 },
           );
@@ -398,10 +385,8 @@
       }
 
       function chooseScore() {
-        finishRound(false);
-
         const row = TABLE_ROWS_SELECTABLE[selectedTableRow];
-        scores[row] = scoreCalculators[row](dice);
+        scores[row] = scoreCalculators[row](getCombinedDice());
 
         if (isEndOfGame()) {
           const finalScore = calculateTotal();
@@ -477,12 +462,7 @@
       }
 
       function showSuggestion(row) {
-        const combined = [
-          ...dice.filter((a) => a !== null),
-          ...diceKeep.filter((a) => a !== null),
-        ];
-
-        const score = scoreCalculators[row](combined);
+        const score = scoreCalculators[row](getCombinedDice());
         return '<span class="suggestion">' + score + "</span>";
       }
 
@@ -688,6 +668,13 @@
 
       function getDiceCount() {
         return dice.filter((d) => d !== null).length;
+      }
+
+      function getCombinedDice() {
+        return [
+          ...dice.filter((a) => a !== null),
+          ...diceKeep.filter((a) => a !== null),
+        ];
       }
 
       function getPreviousSelectedTableRow() {
