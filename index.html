@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>nano-dice</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -789,6 +789,7 @@
         display: flex;
         justify-content: center;
         min-height: 100vh;
+        min-height: 100dvh;
         margin: 0;
         transition:
           background-color 0.3s,
@@ -826,8 +827,8 @@
 
       @media (max-width: 1023px) {
         body {
-          align-items: end;
-          padding-bottom: 8px;
+          align-items: flex-end;
+          padding-bottom: max(16px, env(safe-area-inset-bottom));
         }
 
         .main-container {
