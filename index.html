@@ -389,10 +389,10 @@
         scores[row] = scoreCalculators[row](getCombinedDice());
 
         if (isEndOfGame()) {
-          const finalScore = calculateTotal();
-          if (finalScore > highScore) {
-            highScore = finalScore;
-            localStorage.setItem("keyYachtHighScore", highScore);
+          const total = calculateTotal();
+          if (total > highScore) {
+            highScore = total;
+            localStorage.setItem("nanoDiceHighScore", highScore);
 
             gsap.fromTo(
               "#highScoreDisplay",
