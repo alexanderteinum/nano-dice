@@ -177,8 +177,6 @@
           diceKeep[i] = null;
         }
 
-        dice.sort();
-
         if (animate) {
           gsap.fromTo(
             ".dice svg",
@@ -400,7 +398,7 @@
       }
 
       function chooseScore() {
-        finishRound(rollsLeft > 0);
+        finishRound(false);
 
         const row = TABLE_ROWS_SELECTABLE[selectedTableRow];
         scores[row] = scoreCalculators[row](dice);
