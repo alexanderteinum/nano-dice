@@ -276,8 +276,10 @@
                 scores[TABLE_ROWS_SELECTABLE[selectedTableRow]] !== null
               );
             } else if (mode === MODE_DICE) {
-              mode = MODE_DICE_KEEP;
-              lastDiceMode = MODE_DICE_KEEP;
+              if (getDiceKeepCount() > 0) {
+                mode = MODE_DICE_KEEP;
+                lastDiceMode = MODE_DICE_KEEP;
+              }
             }
             e.preventDefault();
             break;
