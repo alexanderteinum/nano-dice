@@ -2,6 +2,8 @@
 
 A fast, lightweight Yacht clone for quick, focused play.
 
+![nano-dice screenshot](screenshot.png)
+
 **Play it live:** [nano-dice.netlify.app](https://nano-dice.netlify.app)
 
 ## How to play
