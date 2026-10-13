@@ -98,6 +98,7 @@
       let dice;
       let activeDie;
       let rollsLeft;
+      let scoredRowThisRound;
 
       function handleLoad() {
         initializeGame();
@@ -116,6 +117,7 @@
         mode = MODE_DICE;
         lastDiceMode = MODE_DICE;
         selectedTableRow = 0;
+        scoredRowThisRound = null;
         diceKeep = [null, null, null, null, null];
         activeDieKeep = 0;
         dice = [
@@ -186,8 +188,12 @@
         if (
           mode === MODE_CHOOSE_SCORE ||
           mode === MODE_DICE ||
-          mode === MODE_DICE_KEEP
+          mode === MODE_DICE_KEEP ||
+          (mode === MODE_END_ROUND && scoredRowThisRound !== null)
         ) {
+          if (mode === MODE_END_ROUND) {
+            scores[TABLE_ROWS_SELECTABLE[scoredRowThisRound]] = null;
+          }
           selectedTableRow = rowIndex;
           chooseScore();
           if (isEndOfGame()) {
@@ -363,6 +369,7 @@
       function chooseScore() {
         const row = TABLE_ROWS_SELECTABLE[selectedTableRow];
         scores[row] = scoreCalculators[row](getCombinedDice());
+        scoredRowThisRound = selectedTableRow;
 
         gsap.fromTo(
           "#" + TABLE_ROWS_SELECTABLE[selectedTableRow],
