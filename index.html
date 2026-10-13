@@ -6,7 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..800;1,300..800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
@@ -723,61 +723,65 @@
     </script>
     <style>
       :root {
-        --base: #24273a;
-        --text: #cad3f5;
-        --surface0: #363a4f;
-        --surface1: #494d64;
-        --surface2: #5b6078;
-        --overlay0: #6e738d;
-        --overlay1: #8087a2;
-        --mantle: #1e2030;
-        --subtext0: #a5adcb;
-        --blue: #8aadf4;
-        --lavender: #b7bdf8;
+        color-scheme: dark;
+        --base: #111318;
+        --text: #eef1f5;
+        --surface0: #20242c;
+        --surface1: #2b303a;
+        --surface2: #39414d;
+        --overlay0: #8b95a5;
+        --overlay1: #566171;
+        --mantle: #181b21;
+        --subtext0: #b0b8c5;
+        --blue: #7aa2ff;
+        --lavender: #a5b4fc;
       }
 
       @media (prefers-color-scheme: light) {
         :root {
-          --base: #eff1f5;
-          --text: #4c4f69;
-          --surface0: #ccd0da;
-          --surface1: #bcc0cc;
-          --surface2: #acb0be;
-          --overlay0: #9ca0b0;
-          --overlay1: #8c8fa1;
-          --mantle: #e6e9ef;
-          --subtext0: #5c5f77;
-          --blue: #1e66f5;
-          --lavender: #7287fd;
+          color-scheme: light;
+          --base: #f5f6f8;
+          --text: #20242c;
+          --surface0: #e9edf2;
+          --surface1: #d9dfe7;
+          --surface2: #c4ccd7;
+          --overlay0: #697586;
+          --overlay1: #9aa4b2;
+          --mantle: #ffffff;
+          --subtext0: #586273;
+          --blue: #315fce;
+          --lavender: #5148b8;
         }
       }
 
       :root[data-theme="dark"] {
-        --base: #24273a;
-        --text: #cad3f5;
-        --surface0: #363a4f;
-        --surface1: #494d64;
-        --surface2: #5b6078;
-        --overlay0: #6e738d;
-        --overlay1: #8087a2;
-        --mantle: #1e2030;
-        --subtext0: #a5adcb;
-        --blue: #8aadf4;
-        --lavender: #b7bdf8;
+        color-scheme: dark;
+        --base: #111318;
+        --text: #eef1f5;
+        --surface0: #20242c;
+        --surface1: #2b303a;
+        --surface2: #39414d;
+        --overlay0: #8b95a5;
+        --overlay1: #566171;
+        --mantle: #181b21;
+        --subtext0: #b0b8c5;
+        --blue: #7aa2ff;
+        --lavender: #a5b4fc;
       }
 
       :root[data-theme="light"] {
-        --base: #eff1f5;
-        --text: #4c4f69;
-        --surface0: #ccd0da;
-        --surface1: #bcc0cc;
-        --surface2: #acb0be;
-        --overlay0: #9ca0b0;
-        --overlay1: #8c8fa1;
-        --mantle: #e6e9ef;
-        --subtext0: #5c5f77;
-        --blue: #1e66f5;
-        --lavender: #7287fd;
+        color-scheme: light;
+        --base: #f5f6f8;
+        --text: #20242c;
+        --surface0: #e9edf2;
+        --surface1: #d9dfe7;
+        --surface2: #c4ccd7;
+        --overlay0: #697586;
+        --overlay1: #9aa4b2;
+        --mantle: #ffffff;
+        --subtext0: #586273;
+        --blue: #315fce;
+        --lavender: #5148b8;
       }
 
       * {
@@ -807,8 +811,7 @@
 
       body,
       button {
-        font-family: Inter;
-        text-transform: lowercase;
+        font-family: "Instrument Sans", sans-serif;
       }
 
       .main-container {
@@ -970,7 +973,7 @@
       th,
       td {
         border: 1px solid var(--surface1);
-        padding: 4px;
+        padding: 7px 4px;
         font-size: 14px;
         width: 50%;
         transition: border-color 0.3s;
