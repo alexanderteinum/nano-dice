@@ -98,14 +98,8 @@
       let dice;
       let activeDie;
       let rollsLeft;
-      let highScore = 0;
 
       function handleLoad() {
-        const storedHighScore = localStorage.getItem("nanoDiceHighScore");
-        if (storedHighScore) {
-          highScore = parseInt(storedHighScore, 10);
-        }
-
         initializeGame();
         refreshAll();
       }
@@ -370,20 +364,6 @@
         const row = TABLE_ROWS_SELECTABLE[selectedTableRow];
         scores[row] = scoreCalculators[row](getCombinedDice());
 
-        if (isEndOfGame()) {
-          const total = calculateTotal();
-          if (total > highScore) {
-            highScore = total;
-            localStorage.setItem("nanoDiceHighScore", highScore);
-
-            gsap.fromTo(
-              "#highScoreDisplay",
-              { color: "var(--text)" },
-              { color: "var(--overlay0)", duration: 1 },
-            );
-          }
-        }
-
         gsap.fromTo(
           "#" + TABLE_ROWS_SELECTABLE[selectedTableRow],
           { y: -10, opacity: 0 },
@@ -434,9 +414,6 @@
           bonus === null ? "" : bonus;
         document.getElementById(SCORE_TOTAL).children[1].innerHTML =
           calculateTotal();
-
-        document.getElementById("highScoreValue").innerText =
-          highScore > 0 ? highScore : "—";
       }
 
       function showSuggestion(row) {
@@ -882,12 +859,6 @@
         transition: color 0.3s;
       }
 
-      .high-score-display {
-        font-size: 12px;
-        color: var(--overlay0);
-        margin-top: 8px;
-      }
-
       @media (max-width: 1023px) {
         body {
           height: 100vh;
@@ -916,10 +887,6 @@
         .game-area {
           gap: 16px;
           min-height: 200px;
-        }
-
-        .high-score-display {
-          display: none;
         }
 
         table {
@@ -1189,9 +1156,6 @@
             </tr>
           </tbody>
         </table>
-        <div id="highScoreDisplay" class="high-score-display">
-          High Score: <span id="highScoreValue">—</span>
-        </div>
       </div>
       <div class="game-area">
         <div class="end-of-game" id="endOfGame" style="display: none">

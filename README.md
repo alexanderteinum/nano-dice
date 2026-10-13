@@ -1,23 +1,24 @@
 # nano-dice
 
-A blazing fast and fully keyboard-driven Yacht clone.
-
-![watch-drift screenshot](screenshot.png)
+A fast, lightweight Yacht clone for quick, focused play.
 
 **Play it live:** [nano-dice.netlify.app](https://nano-dice.netlify.app)
 
-## Features
+## How to play
 
-* **100% Keyboard Support:** Navigate with `Arrows`, keep/release dice with `Space`, and roll/confirm with `Enter`.
-* **Zero-delay Touch:** Optimized with `touch-action: manipulation` and disabled text-selection. (Tip: Add it to your home screen as a PWA for an immersive fullscreen experience!)
-* **Zero-lag SVG Sprites:** Dice are embedded as SVG `<symbol>`s using `<use>` tags. Zero network requests during gameplay means instant dice switching.
-* **Snappy Animations:** Powered by a tiny sprinkle of GSAP for 0.2s staggers that give the game a physical feel without slowing you down.
-* **Local High Score:** Saves your best score directly to `localStorage`. No backend, no accounts, just you against yourself.
+Roll up to three times per turn, keeping or releasing dice with **Space** or a tap. Use the arrow keys to navigate; press **Enter** to roll or confirm a score. On touchscreens, tap **Roll Dice** to roll or start the next round, and tap an available score row to choose it. Each row can be scored once.
 
-## How to Play
+## Scoring notes
 
-The rules are based on the modern, strategically balanced version of Yacht:
+These are the special scoring values used in nano-dice:
 
-* **4 of a Kind** counts the sum of all 5 dice.
-* **Small Straight** is 15 points.
-* **Large Straight** is 30 points.
+* **4 of a Kind:** score the sum of all five dice.
+* **Small Straight:** 15 points.
+* **Large Straight:** 30 points.
+
+## Made for quick play
+
+* Play with a keyboard or touchscreen.
+* Enjoy quick dice animations and a clean, single-screen layout.
+* The game follows your device’s light or dark appearance setting.
+* No account or sign-up is needed.
