@@ -244,6 +244,7 @@
             if (mode === MODE_DICE_KEEP) {
               if (activeDieKeep === 0) {
                 mode = MODE_CHOOSE_SCORE;
+                setSelectedTableRowOnModeChange();
               } else {
                 activeDieKeep =
                   (activeDieKeep - 1 + getDiceKeepCount()) % getDiceKeepCount();
@@ -251,6 +252,7 @@
             } else if (mode === MODE_DICE) {
               if (activeDie === 0) {
                 mode = MODE_CHOOSE_SCORE;
+                setSelectedTableRowOnModeChange();
               } else {
                 activeDie = (activeDie - 1 + getDiceCount()) % getDiceCount();
               }
