@@ -8,7 +8,7 @@ A fast, lightweight Yacht clone for quick, focused play.
 
 ## How to play
 
-Roll up to three times per turn, keeping or releasing dice with **Space** or a tap. Use the arrow keys to navigate; press **Enter** to roll or confirm a score. On touchscreens, tap **Roll Dice** to roll or start the next round, and tap an available score row to choose it. Each row can be scored once.
+Roll up to three times per turn, keeping or releasing dice with **Space** or a tap. Use the arrow keys to navigate; press **Enter** to roll or confirm a score. On touchscreens, tap **Roll dice** to roll or start the next round, and tap an available score row to choose it. Each row can be scored once.
 
 ## Scoring notes
 
