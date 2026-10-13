@@ -165,7 +165,7 @@
           mode = MODE_CHOOSE_SCORE;
           setSelectedTableRowOnModeChange();
           gsap.fromTo(
-            "svg:not(.none)",
+            ".dice svg:not(.none)",
             { opacity: 0 },
             { opacity: 1, duration: 1, stagger: 0.1 },
           );
