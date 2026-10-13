@@ -34,7 +34,6 @@
       const SCORE_SIXES = "scoreSixes";
       const SCORE_SUM = "scoreSum";
       const SCORE_BONUS = "scoreBonus";
-      const SCORE_SUM_BONUS = "scoreSumBonus";
       const SCORE_CHOICE = "scoreChoice";
       const SCORE_FOUR_OF_A_KIND = "scoreFourOfAKind";
       const SCORE_FULL_HOUSE = "scoreFullHouse";
@@ -52,7 +51,6 @@
         SCORE_SIXES,
         SCORE_SUM,
         SCORE_BONUS,
-        SCORE_SUM_BONUS,
         SCORE_CHOICE,
         SCORE_FOUR_OF_A_KIND,
         SCORE_FULL_HOUSE,
@@ -449,14 +447,10 @@
 
         const sum = calculateSum();
         const bonus = calculateBonus();
-        let sumBonus = sum + "/63";
-        sumBonus += bonus === null ? "" : ", +" + bonus;
 
         document.getElementById(SCORE_SUM).children[1].innerHTML = sum + "/63";
         document.getElementById(SCORE_BONUS).children[1].innerHTML =
           bonus === null ? "" : bonus;
-        document.getElementById(SCORE_SUM_BONUS).children[1].innerHTML =
-          sumBonus;
         document.getElementById(SCORE_TOTAL).children[1].innerHTML =
           calculateTotal();
 
@@ -831,47 +825,6 @@
           gap: 2px;
       }
 
-      @media (max-width: 1023px) {
-        body {
-          align-items: flex-end;
-          padding-bottom: max(16px, env(safe-area-inset-bottom));
-        }
-
-        .main-container {
-          flex-direction: column;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .game-area {
-          gap: 8px;
-        }
-
-        button.roll-dice {
-          font-size: 20px;
-          padding: 4px 12px;
-        }
-
-        .end-of-game {
-          font-size: 48px;
-          height: 120px;
-          line-height: 120px;
-        }
-
-        .dice-keep svg {
-          width: 48px;
-        }
-
-        .dice svg {
-          width: 64px;
-        }
-
-        .score-sum,
-        .score-bonus {
-          display: none;
-        }
-      }
-
       @media (min-width: 1024px) {
         body {
           align-items: center;
@@ -930,10 +883,6 @@
         .dice svg:not(.none, .disabled),
         button.roll-dice:not(:disabled) {
           cursor: pointer;
-        }
-
-        .score-sum-bonus {
-          display: none;
         }
 
         .end-of-game {
@@ -1090,6 +1039,74 @@
       }
 
       @media (max-width: 1023px) {
+        body {
+          height: 100vh;
+          height: 100dvh;
+          align-items: stretch;
+          padding: max(12px, env(safe-area-inset-top)) 16px
+            max(12px, env(safe-area-inset-bottom));
+        }
+
+        .main-container {
+          flex: 1;
+          width: 100%;
+          min-height: 0;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
+        }
+
+        .table-container {
+          flex: 1;
+          min-height: 0;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .game-area {
+          gap: 8px;
+        }
+
+        table {
+          flex: 1;
+          width: 100%;
+          min-height: 0;
+          table-layout: fixed;
+        }
+
+        th,
+        td {
+          padding-top: 7px;
+          padding-bottom: 7px;
+        }
+
+        button.roll-dice {
+          font-size: 20px;
+          padding: 4px 12px;
+        }
+
+        .end-of-game {
+          font-size: 48px;
+          height: 120px;
+          line-height: 120px;
+        }
+
+        .dice-keep svg {
+          width: 48px;
+        }
+
+        .dice-keep,
+        .dice {
+          display: flex;
+          flex-wrap: nowrap;
+          justify-content: center;
+          gap: 2px;
+        }
+
+        .dice svg {
+          width: min(64px, calc((100vw - 48px) / 5));
+        }
+
         .info-container {
           display: none;
         }
@@ -1264,23 +1281,6 @@
             <tr class="score-bonus" id="scoreBonus">
               <td style="border-bottom: 1px solid var(--overlay1)">Bonus</td>
               <td style="border-bottom: 1px solid var(--overlay1)"></td>
-            </tr>
-            <tr class="score-sum-bonus" id="scoreSumBonus">
-              <td
-                style="
-                  border-top: 1px solid var(--overlay1);
-                  border-bottom: 1px solid var(--overlay1);
-                "
-              >
-                Sum/Bonus
-              </td>
-              <td
-                class="sum"
-                style="
-                  border-top: 1px solid var(--overlay1);
-                  border-bottom: 1px solid var(--overlay1);
-                "
-              ></td>
             </tr>
             <tr
               class="selectable"
