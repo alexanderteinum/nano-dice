@@ -24,7 +24,6 @@
       const KEY_DOWN = 40;
       const KEY_ENTER = 13;
       const KEY_SPACE = 32;
-      const KEY_T = 84;
 
       const SCORE_ONES = "scoreOnes";
       const SCORE_TWOS = "scoreTwos";
@@ -222,22 +221,6 @@
         refreshAll();
       }
 
-      function toggleTheme() {
-        const root = document.documentElement;
-        const currentTheme = root.getAttribute("data-theme");
-
-        if (currentTheme === "dark") {
-          root.setAttribute("data-theme", "light");
-        } else if (currentTheme === "light") {
-          root.setAttribute("data-theme", "dark");
-        } else {
-          const prefersLight = window.matchMedia(
-            "(prefers-color-scheme: light)",
-          ).matches;
-          root.setAttribute("data-theme", prefersLight ? "dark" : "light");
-        }
-      }
-
       function handleKeyDown(e) {
         switch (e.keyCode) {
           case KEY_LEFT:
@@ -327,10 +310,6 @@
             } else if (mode === MODE_DICE) {
               keepCurrentDie();
             }
-            e.preventDefault();
-            break;
-          case KEY_T:
-            toggleTheme();
             e.preventDefault();
             break;
         }
@@ -724,28 +703,6 @@
           --overlay0: #747d89;
           --overlay1: #aab1bb;
         }
-      }
-
-      :root[data-theme="dark"] {
-        color-scheme: dark;
-        --base: #1b1e24;
-        --text: #c7ccd4;
-        --surface0: #252a32;
-        --surface1: #303640;
-        --surface2: #414954;
-        --overlay0: #9099a6;
-        --overlay1: #535c69;
-      }
-
-      :root[data-theme="light"] {
-        color-scheme: light;
-        --base: #f1f2f4;
-        --text: #555c66;
-        --surface0: #e7e9ed;
-        --surface1: #dce0e5;
-        --surface2: #cbd1d9;
-        --overlay0: #747d89;
-        --overlay1: #aab1bb;
       }
 
       * {
