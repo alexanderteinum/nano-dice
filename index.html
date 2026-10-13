@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>nano-dice</title>
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -460,7 +461,7 @@
           calculateTotal();
 
         document.getElementById("highScoreValue").innerText =
-          highScore > 0 ? highScore : "–";
+          highScore > 0 ? highScore : "—";
       }
 
       function showSuggestion(row) {
@@ -1336,7 +1337,7 @@
           </tbody>
         </table>
         <div id="highScoreDisplay" class="high-score-display">
-          high score: <span id="highScoreValue">-</span>
+          high score: <span id="highScoreValue">—</span>
         </div>
       </div>
       <div class="game-area">
