@@ -700,23 +700,6 @@
         }
         return true;
       }
-
-      function toggleInfo(event) {
-        event.stopPropagation();
-        const panel = document.getElementById("infoPanel");
-        panel.classList.toggle("show");
-      }
-
-      document.addEventListener("click", function (event) {
-        const panel = document.getElementById("infoPanel");
-        const container = document.getElementById("infoContainer");
-        if (
-          panel.classList.contains("show") &&
-          !container.contains(event.target)
-        ) {
-          panel.classList.remove("show");
-        }
-      });
     </script>
     <style>
       :root {
@@ -728,10 +711,6 @@
         --surface2: #414954;
         --overlay0: #9099a6;
         --overlay1: #535c69;
-        --mantle: #22262d;
-        --subtext0: #aeb5bf;
-        --blue: #8199c4;
-        --lavender: #9aa4cd;
       }
 
       @media (prefers-color-scheme: light) {
@@ -744,10 +723,6 @@
           --surface2: #cbd1d9;
           --overlay0: #747d89;
           --overlay1: #aab1bb;
-          --mantle: #e8eaee;
-          --subtext0: #69717c;
-          --blue: #5872a9;
-          --lavender: #706aa6;
         }
       }
 
@@ -760,10 +735,6 @@
         --surface2: #414954;
         --overlay0: #9099a6;
         --overlay1: #535c69;
-        --mantle: #22262d;
-        --subtext0: #aeb5bf;
-        --blue: #8199c4;
-        --lavender: #9aa4cd;
       }
 
       :root[data-theme="light"] {
@@ -775,10 +746,6 @@
         --surface2: #cbd1d9;
         --overlay0: #747d89;
         --overlay1: #aab1bb;
-        --mantle: #e8eaee;
-        --subtext0: #69717c;
-        --blue: #5872a9;
-        --lavender: #706aa6;
       }
 
       * {
@@ -964,82 +931,6 @@
         margin-top: 8px;
       }
 
-      .info-container {
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        z-index: 100;
-      }
-
-      .info-button {
-        width: 32px;
-        height: 32px;
-        color: var(--overlay0);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        cursor: pointer;
-        user-select: none;
-        transition: color 0.3s;
-      }
-
-      .info-button:hover {
-        color: var(--text);
-      }
-
-      .info-panel {
-        position: absolute;
-        bottom: 40px;
-        right: 0;
-        background-color: var(--mantle);
-        padding: 16px 20px;
-        border-radius: 12px;
-        width: max-content;
-        opacity: 0;
-        pointer-events: none;
-        transform: translateY(5px);
-        transition:
-          opacity 0.2s,
-          transform 0.2s,
-          background-color 0.3s;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        color: var(--subtext0);
-        font-size: 13px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .info-panel.show {
-        opacity: 1;
-        pointer-events: auto;
-        transform: translateY(0);
-      }
-
-      .info-panel p {
-        margin: 0;
-        display: flex;
-        justify-content: space-between;
-        gap: 24px;
-      }
-
-      .info-panel strong {
-        color: var(--text);
-        font-weight: 600;
-      }
-
-      .info-panel a {
-        color: var(--blue);
-        text-decoration: none;
-        margin-top: 4px;
-        transition: color 0.2s;
-      }
-
-      .info-panel a:hover {
-        color: var(--lavender);
-      }
-
       @media (max-width: 1023px) {
         body {
           height: 100vh;
@@ -1115,9 +1006,6 @@
           width: min(64px, calc((100vw - 48px) / 5));
         }
 
-        .info-container {
-          display: none;
-        }
       }
     </style>
   </head>
@@ -1441,19 +1329,6 @@
             Roll dice (2)
           </button>
         </div>
-      </div>
-    </div>
-    <div class="info-container" id="infoContainer">
-      <div class="info-button" onclick="toggleInfo(event)">?</div>
-
-      <div class="info-panel" id="infoPanel">
-        <p><strong>Arrows</strong> Navigate</p>
-        <p><strong>Space</strong> Keep / Release</p>
-        <p><strong>Enter</strong> Roll / Confirm</p>
-        <p><strong>T</strong> Toggle Theme</p>
-        <a href="https://ko-fi.com/alexanderteinum" target="_blank"
-          >☕ Buy Me a Coffee</a
-        >
       </div>
     </div>
   </body>
