@@ -817,6 +817,15 @@
         }
       }
 
+      @media (hover: none) and (pointer: coarse) {
+        .dice-keep svg.active-keep,
+        .dice svg.active,
+        svg:not(.none, .disabled):hover {
+          --die-face: var(--surface0);
+          background-color: transparent;
+        }
+      }
+
       button.roll-dice {
         font-size: 20px;
         border: 0;
