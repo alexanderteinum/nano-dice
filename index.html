@@ -732,7 +732,7 @@
       }
 
       .dice-keep, .dice {
-          gap: 2px;
+        gap: 2px;
       }
 
       @media (min-width: 1024px) {
@@ -746,9 +746,6 @@
 
         .game-area {
           width: 640px;
-        }
-
-        .game-area {
           gap: 16px;
         }
 
@@ -891,28 +888,31 @@
           flex-direction: column;
         }
 
-        .game-area {
-          gap: 16px;
-          min-height: 200px;
-        }
-
         table {
           flex: 1;
           width: 100%;
-          min-height: 0;
+          height: 100%;
           table-layout: fixed;
         }
 
         th,
         td {
-          padding-top: 7px;
-          padding-bottom: 7px;
+          padding: 2px 4px;
+          height: 1px;
+        }
+
+        .game-area {
+          flex-shrink: 0;
+          gap: 12px;
+          min-height: auto;
         }
 
         button.roll-dice {
-          min-height: 56px;
-          font-size: 22px;
+          flex-shrink: 0;
+          min-height: 52px;
+          font-size: 20px;
           padding: 12px 24px;
+          width: 100%;
         }
 
         .end-of-game {
@@ -921,22 +921,26 @@
           line-height: 120px;
         }
 
-        .dice-keep svg {
-          width: 48px;
-        }
-
         .dice-keep,
         .dice {
           display: flex;
           flex-wrap: nowrap;
           justify-content: center;
-          gap: 2px;
+          gap: 6px;
+          flex-shrink: 0;
+        }
+
+        .dice-keep svg {
+          width: 48px;
+          height: 48px;
+          flex-shrink: 0;
         }
 
         .dice svg {
-          width: min(64px, calc((100vw - 48px) / 5));
+          width: 58px;
+          height: 58px;
+          flex-shrink: 0;
         }
-
       }
     </style>
   </head>
