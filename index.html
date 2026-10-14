@@ -675,6 +675,10 @@
         --overlay0: #9099a6;
         --overlay1: #535c69;
         --suggestion: #4a515b;
+        --die-face: var(--surface0);
+        --die-outline: var(--surface2);
+        --die-glow: #4b5666;
+        --die-pip: var(--text);
       }
 
       @media (prefers-color-scheme: light) {
@@ -688,6 +692,10 @@
           --overlay0: #747d89;
           --overlay1: #aab1bb;
           --suggestion: #c0c6ce;
+          --die-face: var(--surface0);
+          --die-outline: var(--surface2);
+          --die-glow: #cbd8e8;
+          --die-pip: var(--text);
         }
       }
 
@@ -737,6 +745,13 @@
         gap: 2px;
       }
 
+      .dice-keep svg.active-keep,
+      .dice svg.active {
+        --die-face: var(--surface1);
+        background-color: var(--die-glow);
+        border-radius: 22%;
+      }
+
       @media (min-width: 1024px) {
         body {
           align-items: center;
@@ -768,6 +783,7 @@
         }
 
         svg:not(.none, .disabled):hover {
+          --die-face: var(--surface1);
           background-color: var(--surface1);
         }
 
@@ -957,11 +973,11 @@
           width="416"
           height="416"
           rx="96"
-          fill="none"
-          stroke="currentColor"
+          fill="var(--die-face)"
+          stroke="var(--die-outline)"
           stroke-width="8"
         />
-        <circle cx="256" cy="256" r="32" fill="currentColor" />
+        <circle cx="256" cy="256" r="32" fill="var(--die-pip)" />
       </symbol>
 
       <symbol id="dice-2" viewBox="0 0 512 512">
@@ -971,12 +987,12 @@
           width="416"
           height="416"
           rx="96"
-          fill="none"
-          stroke="currentColor"
+          fill="var(--die-face)"
+          stroke="var(--die-outline)"
           stroke-width="8"
         />
-        <circle cx="368" cy="144" r="32" fill="currentColor" />
-        <circle cx="144" cy="368" r="32" fill="currentColor" />
+        <circle cx="368" cy="144" r="32" fill="var(--die-pip)" />
+        <circle cx="144" cy="368" r="32" fill="var(--die-pip)" />
       </symbol>
 
       <symbol id="dice-3" viewBox="0 0 512 512">
@@ -986,13 +1002,13 @@
           width="416"
           height="416"
           rx="96"
-          fill="none"
-          stroke="currentColor"
+          fill="var(--die-face)"
+          stroke="var(--die-outline)"
           stroke-width="8"
         />
-        <circle cx="368" cy="144" r="32" fill="currentColor" />
-        <circle cx="256" cy="256" r="32" fill="currentColor" />
-        <circle cx="144" cy="368" r="32" fill="currentColor" />
+        <circle cx="368" cy="144" r="32" fill="var(--die-pip)" />
+        <circle cx="256" cy="256" r="32" fill="var(--die-pip)" />
+        <circle cx="144" cy="368" r="32" fill="var(--die-pip)" />
       </symbol>
 
       <symbol id="dice-4" viewBox="0 0 512 512">
@@ -1002,14 +1018,14 @@
           width="416"
           height="416"
           rx="96"
-          fill="none"
-          stroke="currentColor"
+          fill="var(--die-face)"
+          stroke="var(--die-outline)"
           stroke-width="8"
         />
-        <circle cx="144" cy="144" r="32" fill="currentColor" />
-        <circle cx="368" cy="144" r="32" fill="currentColor" />
-        <circle cx="144" cy="368" r="32" fill="currentColor" />
-        <circle cx="368" cy="368" r="32" fill="currentColor" />
+        <circle cx="144" cy="144" r="32" fill="var(--die-pip)" />
+        <circle cx="368" cy="144" r="32" fill="var(--die-pip)" />
+        <circle cx="144" cy="368" r="32" fill="var(--die-pip)" />
+        <circle cx="368" cy="368" r="32" fill="var(--die-pip)" />
       </symbol>
 
       <symbol id="dice-5" viewBox="0 0 512 512">
@@ -1019,15 +1035,15 @@
           width="416"
           height="416"
           rx="96"
-          fill="none"
-          stroke="currentColor"
+          fill="var(--die-face)"
+          stroke="var(--die-outline)"
           stroke-width="8"
         />
-        <circle cx="144" cy="144" r="32" fill="currentColor" />
-        <circle cx="368" cy="144" r="32" fill="currentColor" />
-        <circle cx="256" cy="256" r="32" fill="currentColor" />
-        <circle cx="144" cy="368" r="32" fill="currentColor" />
-        <circle cx="368" cy="368" r="32" fill="currentColor" />
+        <circle cx="144" cy="144" r="32" fill="var(--die-pip)" />
+        <circle cx="368" cy="144" r="32" fill="var(--die-pip)" />
+        <circle cx="256" cy="256" r="32" fill="var(--die-pip)" />
+        <circle cx="144" cy="368" r="32" fill="var(--die-pip)" />
+        <circle cx="368" cy="368" r="32" fill="var(--die-pip)" />
       </symbol>
 
       <symbol id="dice-6" viewBox="0 0 512 512">
@@ -1037,16 +1053,16 @@
           width="416"
           height="416"
           rx="96"
-          fill="none"
-          stroke="currentColor"
+          fill="var(--die-face)"
+          stroke="var(--die-outline)"
           stroke-width="8"
         />
-        <circle cx="144" cy="144" r="32" fill="currentColor" />
-        <circle cx="144" cy="256" r="32" fill="currentColor" />
-        <circle cx="144" cy="368" r="32" fill="currentColor" />
-        <circle cx="368" cy="144" r="32" fill="currentColor" />
-        <circle cx="368" cy="256" r="32" fill="currentColor" />
-        <circle cx="368" cy="368" r="32" fill="currentColor" />
+        <circle cx="144" cy="144" r="32" fill="var(--die-pip)" />
+        <circle cx="144" cy="256" r="32" fill="var(--die-pip)" />
+        <circle cx="144" cy="368" r="32" fill="var(--die-pip)" />
+        <circle cx="368" cy="144" r="32" fill="var(--die-pip)" />
+        <circle cx="368" cy="256" r="32" fill="var(--die-pip)" />
+        <circle cx="368" cy="368" r="32" fill="var(--die-pip)" />
       </symbol>
     </svg>
     <div class="main-container">
