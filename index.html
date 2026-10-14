@@ -510,7 +510,7 @@
         }
 
         if (isEndOfGame()) {
-          document.getElementById("endOfGame").style.display = "block";
+          document.getElementById("endOfGame").style.display = "flex";
           document.getElementById("diceKeep").style.display = "none";
           document.getElementById("dice").style.display = "none";
         } else {
@@ -945,9 +945,13 @@
         }
 
         .end-of-game {
-          font-size: 48px;
-          height: 120px;
-          line-height: 120px;
+          font-size: 40px;
+          height: 118px;
+          line-height: 118px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
         }
 
         .dice-keep,
