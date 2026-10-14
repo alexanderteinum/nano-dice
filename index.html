@@ -678,6 +678,7 @@
         --die-face: var(--surface0);
         --die-outline: var(--surface2);
         --die-glow: #4b5666;
+        --die-hover-glow: #5d708b;
         --die-pip: var(--text);
       }
 
@@ -695,6 +696,7 @@
           --die-face: var(--surface0);
           --die-outline: var(--surface2);
           --die-glow: #cbd8e8;
+          --die-hover-glow: #d7e2f1;
           --die-pip: var(--text);
         }
       }
@@ -784,7 +786,7 @@
 
         svg:not(.none, .disabled):hover {
           --die-face: var(--surface1);
-          background-color: var(--surface1);
+          background-color: var(--die-hover-glow);
         }
 
         tr.selected {
