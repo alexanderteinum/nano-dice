@@ -32,3 +32,11 @@ These are the special scoring values used in nano-dice:
 * Enjoy quick dice animations and a clean, single-screen layout.
 * The game follows your device’s light or dark appearance setting.
 * No account or sign-up is needed.
+
+## Development
+
+Built with assistance from Gemini and Codex.
+
+## License
+
+[MIT](LICENSE) © 2026 Alexander Teinum.
